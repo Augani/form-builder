@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛠️ Mini Form Builder
 
-## Getting Started
+A mini form builder built with **Next.js App Router**, **Tailwind CSS**, **shadcn/ui**, **PostgreSQL**, **Prisma**, and **Docker**. Users can dynamically create, preview, and save forms with custom fields.
 
-First, run the development server:
+---
 
+## 🚀 Features
+
+- ✨ Create forms with title and description
+- 🔧 Add dynamic fields (Text, Textarea, Select, Checkbox, Radio)
+- ✅ Form field validation using Zod + React Hook Form
+- 📦 Persist forms and fields in PostgreSQL with Prisma
+- 🎨 Responsive and accessible UI using Tailwind + shadcn/ui
+- 🧪 Unit tested with Jest + Testing Library
+- 🐳 Dockerized for easy local development
+
+---
+
+## 🧱 Tech Stack
+
+| Tech         | Purpose                              |
+|--------------|--------------------------------------|
+| Next.js      | Framework (App Router + TypeScript)  |
+| Tailwind CSS | Styling                              |
+| shadcn/ui    | UI components                        |
+| Prisma       | ORM for PostgreSQL                   |
+| PostgreSQL   | Database                             |
+| Docker       | Containerized DB setup               |
+| React Hook Form + Zod | Form management + validation |
+| Jest         | Testing                              |
+
+---
+
+## 📦 Getting Started
+
+### 1. Clone the repo
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/augani/form-builder.git
+cd form-builder
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Start PostgreSQL with Docker
+```bash
+docker-compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Set up your database
+```bash
+npx prisma migrate dev --name init
+```
 
-## Learn More
+### 5. Run the development server
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧪 Running Tests
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm test
+```
 
-## Deploy on Vercel
+Tests are written using **Jest** and **@testing-library/react**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🗂️ Folder Structure (Simplified)
+
+```
+.
+├── app/                 # Next.js App Router
+│   └── builder/         # Form builder page
+├── components/
+│   ├── form-builder/    # Custom builder components
+│   └── ui/              # shadcn/ui components
+├── lib/                 # Prisma client, schemas, utils
+├── prisma/              # Prisma schema + migrations
+├── __tests__/           # Unit tests
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## 📥 API & Persistence
+
+All forms and fields are persisted in a PostgreSQL database using Prisma. You can extend this to support:
+- Form submissions
+- Role-based access
+- Public vs private forms
+
+---
+
+## 📌 TODO (Optional Enhancements)
+
+- [ ] Field reordering (drag & drop)
+- [ ] Export/import form JSON
+- [ ] Live preview while building
+- [ ] Deploy on Vercel
+- [ ] Add i18n support
+
+---
+
+## 📧 Contact
+
+For questions, feel free to reach out at [augustusniiotu@icloud.com](mailto:augustusniiotu@icloud.com) or connect via [GitHub](https://github.com/augani).
+
+---
+
+## 📝 License
+
+MIT — do whatever you want with it.
