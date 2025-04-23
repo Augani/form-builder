@@ -8,6 +8,9 @@ export default createMiddleware({
   defaultLocale,
   // Using always to avoid redirect loops
   localePrefix: "always",
+  // Add default locale to path when current locale is the default locale
+  // This ensures paths like /en/login will work correctly
+  localeDetection: true,
 });
 
 export const config = {

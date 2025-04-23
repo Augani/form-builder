@@ -1,4 +1,44 @@
 {
   "title": "Form Builder",
-  "description": "Create custom forms dynamically."
+  "description": "Create custom forms dynamically.",
+  "login": {
+    "welcome": "Welcome back",
+    "enterCredentials": "Enter your credentials to access your account",
+    "login": "Login",
+    "loginDescription": "Enter your email and password to login to your account",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "terms": "By continuing, you agree to our",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "loginSuccess": "Login successful! Redirecting...",
+    "loginError": "Invalid email or password. Please try again.",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordTooShort": "Password must be at least 6 characters long",
+    "signingIn": "Signing in..."
+  },
+  "home": {
+    "createForms": "Create Beautiful Forms",
+    "effortlessly": "Effortlessly",
+    "buildForms": "Build, customize, and deploy forms in minutes. Our intuitive form builder makes it easy to collect data from your users.",
+    "loginToDashboard": "Login to Dashboard",
+    "learnMore": "Learn More",
+    "whyChoose": "Why Choose Snapform",
+    "easyToUse": "Easy to Use",
+    "easyToUseDesc": "No coding required. Build forms with our drag-and-drop interface.",
+    "customizable": "Customizable",
+    "customizableDesc": "Personalize every aspect of your forms to match your brand.",
+    "responsive": "Responsive",
+    "responsiveDesc": "All forms work flawlessly on any device and screen size.",
+    "readyToStart": "Ready to Get Started?",
+    "joinUsers": "Join thousands of users who trust our platform for their form needs.",
+    "getStarted": "Get Started Now",
+    "copyright": "© {year} Snapform. All rights reserved."
+  }
 }

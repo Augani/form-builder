@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { notFound } from "next/navigation";
@@ -20,21 +19,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Form Builder",
-  description: "Create custom forms dynamically.",
+type Props = {
+  children: React.ReactNode;
+  params: { locale: LocaleType };
 };
+type LocaleType = (typeof locales)[number];
 
 export default async function LocaleLayout({
   children,
-  params: { locale },
-}: Readonly<{
-  children: React.ReactNode;
-  params: { locale: (typeof locales)[number] };
-}>) {
+  params,
+}: Readonly<Props>) {
+  const { locale } = await params;
+  // Validate locale and redirect if invalid
   if (!locales.includes(locale)) notFound();
 
+  // Set locale for server components
   setRequestLocale(locale);
+
   let messages;
   try {
     messages = (await import(`@/messages/${locale}.json`)).default;
@@ -42,7 +43,6 @@ export default async function LocaleLayout({
     console.error(error);
     notFound();
   }
-
   return (
     <html lang={locale}>
       <body

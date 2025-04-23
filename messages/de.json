@@ -1,4 +1,44 @@
 {
   "title": "Formular-Generator",
-  "description": "Erstellen Sie benutzerdefinierte Formulare dynamisch."
+  "description": "Erstellen Sie benutzerdefinierte Formulare dynamisch.",
+  "login": {
+    "welcome": "Willkommen zurück",
+    "enterCredentials": "Geben Sie Ihre Anmeldedaten ein, um auf Ihr Konto zuzugreifen",
+    "login": "Anmelden",
+    "loginDescription": "Geben Sie Ihre E-Mail und Ihr Passwort ein, um sich anzumelden",
+    "email": "E-Mail",
+    "emailPlaceholder": "ihre@email.de",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "signIn": "Anmelden",
+    "noAccount": "Noch kein Konto?",
+    "signUp": "Registrieren",
+    "terms": "Mit der Fortsetzung stimmen Sie unseren",
+    "termsOfService": "Nutzungsbedingungen",
+    "and": "und",
+    "privacyPolicy": "Datenschutzrichtlinien",
+    "loginSuccess": "Anmeldung erfolgreich! Weiterleitung...",
+    "loginError": "Ungültige E-Mail oder Passwort. Bitte versuchen Sie es erneut.",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein",
+    "signingIn": "Anmelden..."
+  },
+  "home": {
+    "createForms": "Erstellen Sie schöne Formulare",
+    "effortlessly": "Mühelos",
+    "buildForms": "Erstellen, anpassen und veröffentlichen Sie Formulare in Minuten. Unser intuitiver Formular-Generator macht es einfach, Daten von Ihren Benutzern zu sammeln.",
+    "loginToDashboard": "Zum Dashboard anmelden",
+    "learnMore": "Mehr erfahren",
+    "whyChoose": "Warum Snapform wählen",
+    "easyToUse": "Einfach zu bedienen",
+    "easyToUseDesc": "Keine Programmierkenntnisse erforderlich. Erstellen Sie Formulare mit unserer Drag-and-Drop-Oberfläche.",
+    "customizable": "Anpassbar",
+    "customizableDesc": "Passen Sie jeden Aspekt Ihrer Formulare an Ihre Marke an.",
+    "responsive": "Responsive",
+    "responsiveDesc": "Alle Formulare funktionieren einwandfrei auf jedem Gerät und jeder Bildschirmgröße.",
+    "readyToStart": "Bereit zu starten?",
+    "joinUsers": "Schließen Sie sich Tausenden von Nutzern an, die unserer Plattform für ihre Formularanforderungen vertrauen.",
+    "getStarted": "Jetzt loslegen",
+    "copyright": "© {year} Snapform. Alle Rechte vorbehalten."
+  }
 }
