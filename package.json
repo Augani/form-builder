@@ -37,6 +37,7 @@
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^29.7.0",
+    "babel-loader": "^10.0.0",
     "commitlint": "^19.8.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
