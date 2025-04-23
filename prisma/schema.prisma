@@ -1,0 +1,71 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password  String
+  name          String?
+  forms         Form[]   // one-to-many relationship
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Form {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  fields      Field[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Field {
+  id        String     @id @default(cuid())
+  form      Form       @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId    String
+  label     String
+  type      FieldType
+  required  Boolean    @default(false)
+  options   String[]   @default([])
+  order     Int
+  validation String?
+  minLength Int?
+  maxLength Int?
+  minValue  Int?
+  maxValue  Int?
+  pattern   String?
+  placeholder String?
+  defaultValue String?
+}
+
+enum FieldType {
+  TEXT
+  TEXTAREA
+  SELECT
+  CHECKBOX
+  RADIO
+  DATE
+  TIME
+  NUMBER
+  EMAIL
+  URL
+  PHONE
+  FILE
+  IMAGE
+  VIDEO
+  AUDIO
+  LINK
+  COLOR
+  RATING
+}
