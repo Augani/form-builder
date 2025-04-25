@@ -8,7 +8,6 @@ export async function GET(
   try {
     const formId = params.id;
 
-    // Get basic form info
     const form = await prisma.form.findUnique({
       where: {
         id: formId,
@@ -25,7 +24,6 @@ export async function GET(
       return NextResponse.json({ error: "Form not found" }, { status: 404 });
     }
 
-    // Return just the basic form information
     return NextResponse.json(form);
   } catch (error) {
     console.error("Error getting form basic info:", error);

@@ -72,7 +72,6 @@ const PreviewFormField = ({
       }
     : {};
 
-  // Render different components based on field type
   switch (field.type.toLowerCase()) {
     case "text":
     case "email":
@@ -204,7 +203,6 @@ const PreviewFormField = ({
   }
 };
 
-// Form Preview component
 export const FormPreview = ({
   formName,
   formDescription,
@@ -233,11 +231,9 @@ export const FormPreview = ({
   const [key, setKey] = useState(0); // Used to force re-render for animations
   const currentStep = 0; // Fixed value for preview
 
-  // Calculate total steps for progress bar
   const totalSteps =
     layout === "step" ? fields.length + (collectEmails ? 1 : 0) : 1;
 
-  // Calculate progress based on form state
   const progress =
     layout === "step" ? ((currentStep + 1) / totalSteps) * 100 : 50; // Default to 50% for preview
 
@@ -259,7 +255,6 @@ export const FormPreview = ({
       }
     : {};
 
-  // Progress bar styles
   const progressBarStyles = theme
     ? ({
         backgroundColor: theme.secondaryColor || "#e5e7eb",
@@ -267,7 +262,6 @@ export const FormPreview = ({
       } as React.CSSProperties)
     : {};
 
-  // Get animation settings based on form configuration
   const getAnimationSettings = () => {
     if (!showAnimationPreview || !animation || animation === "NONE") {
       return {};
@@ -318,7 +312,6 @@ export const FormPreview = ({
       },
     };
 
-    // Convert animation name to lowercase to match with available animations
     const animationKey =
       animation?.toLowerCase() === "none"
         ? "none"
@@ -329,11 +322,9 @@ export const FormPreview = ({
     );
   };
 
-  // Trigger animation when showAnimationPreview changes
   useEffect(() => {
     if (showAnimationPreview) {
       setIsAnimating(false);
-      // Force re-render to trigger animation
       setKey((prev) => prev + 1);
       setTimeout(() => setIsAnimating(true), 50);
     }

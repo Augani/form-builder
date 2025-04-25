@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 
-// Schema for form creation
 const createFormSchema = z.object({
   name: z.string().min(3, "Form name must be at least 3 characters"),
   description: z.string().optional(),
@@ -43,14 +42,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get query parameters
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
     const limit = parseInt(searchParams.get("limit") || "10");
     const page = parseInt(searchParams.get("page") || "1");
     const skip = (page - 1) * limit;
 
-    // Build query
     const where: Record<string, unknown> = {
       userId: session.user.id,
     };
@@ -59,7 +56,6 @@ export async function GET(req: NextRequest) {
       where.status = status;
     }
 
-    // Get forms with pagination
     const [forms, totalCount] = await Promise.all([
       prisma.form.findMany({
         where: where as Prisma.FormWhereInput,
@@ -81,7 +77,6 @@ export async function GET(req: NextRequest) {
       prisma.form.count({ where: where as Prisma.FormWhereInput }),
     ]);
 
-    // Calculate pagination metadata
     const totalPages = Math.ceil(totalCount / limit);
     const hasMore = page < totalPages;
 
@@ -114,7 +109,6 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    // Validate the request body
     const validationResult = createFormSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
@@ -125,7 +119,6 @@ export async function POST(req: NextRequest) {
 
     const { fields, ...formData } = validationResult.data as FormInput;
 
-    // Create the form with fields
     const form = await prisma.form.create({
       data: {
         ...formData,

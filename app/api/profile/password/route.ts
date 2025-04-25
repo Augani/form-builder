@@ -6,7 +6,6 @@ import { compare, hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-// Schema for validation
 const passwordSchema = z
   .object({
     currentPassword: z
@@ -22,12 +21,10 @@ const passwordSchema = z
     path: ["confirmPassword"],
   });
 
-// PATCH: Update user password
 export async function PATCH(request: NextRequest) {
   try {
     const session = await auth();
 
-    // Check if user is authenticated
     if (!session || !session.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -35,7 +32,6 @@ export async function PATCH(request: NextRequest) {
     const userId = session.user.id;
     const body = await request.json();
 
-    // Validate input data
     const result = passwordSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
@@ -46,7 +42,6 @@ export async function PATCH(request: NextRequest) {
 
     const { currentPassword, newPassword } = result.data;
 
-    // Retrieve user with password
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -59,7 +54,6 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Verify current password
     const isPasswordValid = await compare(currentPassword, user.password);
     if (!isPasswordValid) {
       return NextResponse.json(
@@ -68,10 +62,8 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Hash new password
     const hashedPassword = await hash(newPassword, 10);
 
-    // Update user password
     await prisma.user.update({
       where: { id: userId },
       data: {

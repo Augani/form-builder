@@ -3,7 +3,6 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-// Schema for form update
 const updateFormSchema = z.object({
   name: z.string().min(3, "Form name must be at least 3 characters").optional(),
   description: z.string().optional(),
@@ -57,7 +56,6 @@ export async function GET(
 
     const formId = params.id;
 
-    // Get the form with fields
     const form = await prisma.form.findUnique({
       where: {
         id: formId,
@@ -100,7 +98,6 @@ export async function PUT(
 
     const formId = params.id;
 
-    // Check if form exists and belongs to the user
     const existingForm = await prisma.form.findUnique({
       where: {
         id: formId,
@@ -117,7 +114,6 @@ export async function PUT(
 
     const body = await req.json();
 
-    // Validate the request body
     const validationResult = updateFormSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
@@ -128,33 +124,26 @@ export async function PUT(
 
     const { fields, ...formData } = validationResult.data as FormUpdateInput;
 
-    // Create a transaction to update both form and fields
     const updatedForm = await prisma.$transaction(async (tx) => {
-      // Update form data
       await tx.form.update({
         where: { id: formId },
         data: formData,
       });
 
-      // Handle field operations if fields were provided
       if (fields && fields.length > 0) {
-        // Process field operations (create, update, delete)
         for (const field of fields) {
           const { _action, id: fieldId, ...fieldData } = field;
 
           if (_action === "delete" && fieldId) {
-            // Delete existing field
             await tx.field.delete({
               where: { id: fieldId },
             });
           } else if (_action === "update" && fieldId) {
-            // Update existing field
             await tx.field.update({
               where: { id: fieldId },
               data: fieldData,
             });
           } else if (_action === "create" || !_action) {
-            // Create new field
             await tx.field.create({
               data: {
                 ...fieldData,
@@ -166,7 +155,6 @@ export async function PUT(
         }
       }
 
-      // Fetch updated form with fields
       return tx.form.findUnique({
         where: { id: formId },
         include: {
@@ -202,7 +190,6 @@ export async function DELETE(
 
     const formId = params.id;
 
-    // Check if form exists and belongs to the user
     const existingForm = await prisma.form.findUnique({
       where: {
         id: formId,
@@ -214,7 +201,6 @@ export async function DELETE(
       return NextResponse.json({ error: "Form not found" }, { status: 404 });
     }
 
-    // Delete the form (cascading delete will handle fields)
     await prisma.form.delete({
       where: {
         id: formId,

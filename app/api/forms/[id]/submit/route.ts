@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-// Validate email if provided
 const emailSchema = z.string().email("Invalid email address").optional();
 
-// Schema for form submission
 const formSubmissionSchema = z.object({
   email: emailSchema,
   responses: z.array(
@@ -28,7 +26,6 @@ export async function POST(
   try {
     const formId = params.id;
 
-    // Check if the form exists and is active
     const form = await prisma.form.findUnique({
       where: {
         id: formId,
@@ -48,7 +45,6 @@ export async function POST(
 
     const body = await req.json();
 
-    // Validate submission data
     const validationResult = formSubmissionSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
@@ -59,7 +55,6 @@ export async function POST(
 
     const { email, responses } = validationResult.data;
 
-    // Check if email is required but not provided
     if (form.collectEmails && !email) {
       return NextResponse.json(
         { error: "Email is required for this form" },
@@ -67,7 +62,6 @@ export async function POST(
       );
     }
 
-    // Check if one response per user is enabled and user has already responded
     if (form.limitOneResponsePerUser && email) {
       const existingResponse = await prisma.response.findFirst({
         where: {
@@ -84,7 +78,6 @@ export async function POST(
       }
     }
 
-    // Validate that all required fields are answered
     const requiredFieldIds = form.fields
       .filter((field) => field.required)
       .map((field) => field.id);
@@ -104,9 +97,7 @@ export async function POST(
       );
     }
 
-    // Create the response with field responses
     const formResponse = await prisma.$transaction(async (tx) => {
-      // Create the response
       const newResponse = await tx.response.create({
         data: {
           formId,
@@ -115,11 +106,9 @@ export async function POST(
         },
       });
 
-      // Create field responses
       for (const response of responses) {
         const { fieldId, value } = response;
 
-        // Convert array values to comma-separated string
         const stringValue = Array.isArray(value) ? value.join(", ") : value;
 
         await tx.fieldResponse.create({
@@ -131,7 +120,6 @@ export async function POST(
         });
       }
 
-      // Increment the form's response count
       await tx.form.update({
         where: { id: formId },
         data: {

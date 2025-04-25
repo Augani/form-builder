@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { useTranslations } from "next-intl";
 
-// Define FieldType locally to avoid import issues
 type FieldType = {
   id: string;
   type: string;
@@ -89,7 +88,6 @@ export function SortableField({
     if (onUpdate) {
       const updates: Partial<FieldType> = { type: value };
 
-      // Add options array for select, radio, and checkbox types
       if (["select", "radio", "checkbox"].includes(value) && !field.options) {
         updates.options = [""];
       }

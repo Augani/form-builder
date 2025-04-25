@@ -8,7 +8,6 @@ import {
 const prisma = new PrismaClient();
 
 async function main() {
-  // Create a system user for system themes
   const systemUser = await prisma.user.upsert({
     where: { email: "system@snapform.com" },
     update: {},
@@ -21,9 +20,7 @@ async function main() {
 
   console.log(`Created system user with ID: ${systemUser.id}`);
 
-  // Create system themes
   const systemThemes = [
-    // Default Theme
     {
       name: "Default",
       description: "A clean, professional theme with a blue accent",
@@ -39,7 +36,6 @@ async function main() {
       defaultSpacing: FormSpacing.MEDIUM,
       borderRadius: 8,
     },
-    // Dark Theme
     {
       name: "Dark Mode",
       description: "A sleek dark theme that reduces eye strain",
@@ -55,7 +51,6 @@ async function main() {
       defaultSpacing: FormSpacing.MEDIUM,
       borderRadius: 8,
     },
-    // Vibrant Theme
     {
       name: "Vibrant",
       description: "A bold, colorful theme with vibrant accents",
@@ -71,7 +66,6 @@ async function main() {
       defaultSpacing: FormSpacing.MEDIUM,
       borderRadius: 12,
     },
-    // Minimal Theme
     {
       name: "Minimal",
       description: "A minimalist theme with subtle design elements",
@@ -87,7 +81,6 @@ async function main() {
       defaultSpacing: FormSpacing.TIGHT,
       borderRadius: 4,
     },
-    // Nature Theme
     {
       name: "Nature",
       description: "A calming theme inspired by natural elements",
@@ -103,7 +96,6 @@ async function main() {
       defaultSpacing: FormSpacing.WIDE,
       borderRadius: 8,
     },
-    // Corporate Theme
     {
       name: "Corporate",
       description: "A professional theme ideal for business forms",
@@ -119,7 +111,6 @@ async function main() {
       defaultSpacing: FormSpacing.MEDIUM,
       borderRadius: 4,
     },
-    // Playful Theme
     {
       name: "Playful",
       description: "A fun, engaging theme with playful animations",
@@ -135,7 +126,6 @@ async function main() {
       defaultSpacing: FormSpacing.MEDIUM,
       borderRadius: 16,
     },
-    // Modern Theme
     {
       name: "Modern",
       description: "A contemporary theme with clean lines and bold accents",
@@ -156,19 +146,16 @@ async function main() {
   for (const theme of systemThemes) {
     const themeId = `system_${theme.name.toLowerCase().replace(/\s+/g, "_")}`;
 
-    // Check if the theme already exists
     const existingTheme = await prisma.theme.findUnique({
       where: { id: themeId },
     });
 
     if (existingTheme) {
-      // Update existing theme
       await prisma.theme.update({
         where: { id: themeId },
         data: theme,
       });
     } else {
-      // Create new theme
       await prisma.theme.create({
         data: {
           id: themeId,

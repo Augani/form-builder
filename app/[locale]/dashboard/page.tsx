@@ -61,12 +61,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Fetch recent forms
         const formsResponse = await fetch("/api/forms?limit=3");
         if (!formsResponse.ok) throw new Error("Failed to fetch forms");
         const formsData = (await formsResponse.json()) as ApiFormsResponse;
 
-        // Transform the data for display
         const formattedForms = formsData.forms.map((form: ApiForm) => ({
           id: form.id,
           name: form.name,
@@ -76,13 +74,9 @@ export default function DashboardPage() {
 
         setRecentForms(formattedForms);
 
-        // Calculate dashboard stats
-        // For completion rate, we would need additional data/logic
-        // This is a simplified calculation
         const totalForms = formsData.pagination.total;
         let totalResponses = 0;
 
-        // Get total responses across all forms
         const allFormsResponse = await fetch("/api/forms?limit=100");
         if (allFormsResponse.ok) {
           const allFormsData =
@@ -93,7 +87,6 @@ export default function DashboardPage() {
           );
         }
 
-        // Calculate completion rate (simplified)
         const completedResponsesEstimate = Math.floor(totalResponses * 0.68); // Assuming 68% completion
         const completionRate =
           totalResponses > 0
@@ -101,8 +94,6 @@ export default function DashboardPage() {
               "%"
             : "0%";
 
-        // Calculate active users (simplified)
-        // In a real application, this would come from actual user activity tracking
         const activeUsers = Math.max(5, Math.floor(totalForms * 2));
 
         setStats({
@@ -113,7 +104,6 @@ export default function DashboardPage() {
         });
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
-        // Set fallback data if fetch fails
         setRecentForms([]);
         setStats({
           totalForms: 0,
@@ -225,7 +215,6 @@ export default function DashboardPage() {
         </div>
         <div className="space-y-4">
           {loading ? (
-            // Loading state for forms
             Array(3)
               .fill(0)
               .map((_, index) => (

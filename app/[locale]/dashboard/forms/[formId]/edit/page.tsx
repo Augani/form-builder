@@ -51,7 +51,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SortableField } from "@/components/form-builder/sortable-field";
 import { Label } from "@/components/ui/label";
 
-// Define types locally since we're having import issues
 type ThemeType = {
   id: string;
   name: string;
@@ -69,7 +68,6 @@ type ThemeType = {
   borderRadius: number;
 };
 
-// Field type definition
 type FieldType = {
   id: string;
   type: string;
@@ -80,7 +78,6 @@ type FieldType = {
   _action?: "create" | "update" | "delete";
 };
 
-// Form type from API
 interface FormData {
   id: string;
   name: string;
@@ -108,7 +105,6 @@ interface FormData {
   }>;
 }
 
-// Import FormPreview component or implement it here if it doesn't exist
 const FormPreview = ({
   formName,
   formDescription,
@@ -147,7 +143,6 @@ const FormPreview = ({
       }
     : {};
 
-  // Animation classes based on selected animation
   const getAnimationClass = () => {
     if (!showAnimationPreview || !animation || animation === "NONE") return "";
 
@@ -180,7 +175,6 @@ const FormPreview = ({
     }
   };
 
-  // Trigger animation when showAnimationPreview changes
   useEffect(() => {
     if (showAnimationPreview) {
       setIsAnimating(false);
@@ -188,7 +182,6 @@ const FormPreview = ({
     }
   }, [showAnimationPreview, animation, animationSpeed]);
 
-  // Preview Form Field component
   const PreviewFormField = ({
     field,
   }: {
@@ -208,7 +201,6 @@ const FormPreview = ({
         }
       : {};
 
-    // Render different components based on field type
     switch (field.type.toLowerCase()) {
       case "text":
       case "email":
@@ -381,7 +373,6 @@ export default function EditFormPage() {
   const params = useParams();
   const formId = params.formId as string;
 
-  // State for managing form data
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState<FieldType[]>([]);
@@ -393,16 +384,13 @@ export default function EditFormPage() {
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [shuffleQuestions, setShuffleQuestions] = useState(false);
 
-  // Updated theme state
   const [selectedTheme, setSelectedTheme] = useState<ThemeType | undefined>();
 
-  // Updated animation state
   const [selectedAnimation, setSelectedAnimation] = useState<Animation>("NONE");
   const [animationSpeed, setAnimationSpeed] =
     useState<AnimationSpeed>("MEDIUM");
   const [showAnimationPreview, setShowAnimationPreview] = useState(false);
 
-  // Initialize dnd-kit sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -414,7 +402,6 @@ export default function EditFormPage() {
     })
   );
 
-  // Initialize form schema (remove animation & theme fields since they're handled separately)
   const formSchema = z.object({
     title: z.string().min(3, t("nameRequired")),
     description: z.string().optional(),
@@ -422,7 +409,6 @@ export default function EditFormPage() {
 
   type FormValues = z.infer<typeof formSchema>;
 
-  // Initialize form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -431,24 +417,20 @@ export default function EditFormPage() {
     },
   });
 
-  // Fetch form data
   useEffect(() => {
     const fetchFormData = async () => {
       try {
         const response = await apiClient.get(`/api/forms/${formId}`);
         const formData: FormData = response.data;
 
-        // Update form values - exclude fields
         form.reset({
           title: formData.name,
           description: formData.description || "",
         });
 
-        // Set animation values separately
         setSelectedAnimation(formData.animation);
         setAnimationSpeed(formData.animationSpeed);
 
-        // Handle fields separately with state
         const formattedFields = formData.fields.map((field) => ({
           id: field.id,
           type: field.type.toLowerCase(),
@@ -460,14 +442,12 @@ export default function EditFormPage() {
 
         setFields(formattedFields);
 
-        // Update form settings
         setFormStatus(formData.status);
         setCollectEmails(formData.collectEmails);
         setLimitOneResponse(formData.limitOneResponsePerUser);
         setShowProgressBar(formData.showProgressBar);
         setShuffleQuestions(formData.shuffleQuestions);
 
-        // Fetch the theme separately, if available
         if (formData.themeId) {
           try {
             const themeResponse = await apiClient.get(
@@ -491,7 +471,6 @@ export default function EditFormPage() {
     fetchFormData();
   }, [formId, form, t]);
 
-  // Trigger animation preview
   const triggerAnimationPreview = () => {
     setShowAnimationPreview(false);
     setTimeout(() => {
@@ -500,21 +479,18 @@ export default function EditFormPage() {
     }, 100);
   };
 
-  // When theme is selected, set its default animation if appropriate
   useEffect(() => {
     if (selectedTheme && selectedAnimation === "NONE") {
       setSelectedAnimation(selectedTheme.defaultAnimation);
     }
   }, [selectedTheme, selectedAnimation]);
 
-  // Scroll to bottom of form fields
   const scrollToBottom = useCallback(() => {
     if (formFieldsContainerRef.current) {
       formFieldsContainerRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, []);
 
-  // Function to add a new field
   const addField = useCallback(() => {
     setFields([
       ...fields,
@@ -529,11 +505,9 @@ export default function EditFormPage() {
     ]);
   }, [fields]);
 
-  // Function to update the form
   const onSubmit = async (values: FormValues) => {
     setIsSaving(true);
 
-    // Validate that all fields have labels
     const hasEmptyLabels = fields.some((field) => !field.label.trim());
     if (hasEmptyLabels) {
       toast.error(t("allFieldsNeedLabels"));
@@ -542,7 +516,6 @@ export default function EditFormPage() {
     }
 
     try {
-      // Prepare data for API
       const formData = {
         name: values.title,
         description: values.description || "",
@@ -555,7 +528,6 @@ export default function EditFormPage() {
         animation: selectedAnimation,
         animationSpeed: animationSpeed,
         fields: fields.map((field) => {
-          // Determine the action to take based on the field ID
           const isNewField = field.id.startsWith("new_field_");
 
           return {
@@ -570,12 +542,10 @@ export default function EditFormPage() {
         }),
       };
 
-      // Call the update API
       const response = await apiClient.put(`/api/forms/${formId}`, formData);
 
       if (response.data) {
         toast.success(t("formUpdated"));
-        // Navigate to form view page
         router.push(`/dashboard/forms/${formId}`);
       } else {
         toast.error(t("errorUpdatingForm"));
@@ -618,7 +588,6 @@ export default function EditFormPage() {
     };
     setFields([...fields, newField]);
 
-    // Scroll to bottom to show the new field
     setTimeout(() => {
       if (formFieldsContainerRef.current) {
         formFieldsContainerRef.current.scrollIntoView({ behavior: "smooth" });
@@ -626,7 +595,6 @@ export default function EditFormPage() {
     }, 100);
   };
 
-  // Add a function to update field values
   const handleUpdateField = (fieldId: string, updates: Partial<FieldType>) => {
     setFields(
       fields.map((field) =>
@@ -635,20 +603,16 @@ export default function EditFormPage() {
     );
   };
 
-  // Add functions to manage options and remove fields
   const handleRemoveField = (fieldId: string) => {
     console.log("Attempting to remove field with ID:", fieldId);
 
     if (fields.length > 1) {
-      // Create new array without the field to remove
       const updatedFields = fields.filter((field) => field.id !== fieldId);
       console.log("Fields before:", fields.length);
       console.log("Fields after:", updatedFields.length);
 
-      // Update state
       setFields(updatedFields);
 
-      // Show success message
       toast.success("Field removed successfully");
     } else {
       toast.error(t("formBuilder.cannotRemoveLastField"));
@@ -706,7 +670,6 @@ export default function EditFormPage() {
     );
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-6 space-y-6">
@@ -1115,7 +1078,6 @@ export default function EditFormPage() {
   );
 }
 
-// Theme selector component
 function ThemeSelector({
   theme,
   onSelectTheme,
@@ -1139,7 +1101,6 @@ function ThemeSelector({
 
         if (result) {
           setThemes(result.themes);
-          // Set the first theme as default selected
           if (result.themes.length > 0) {
             if (!selectedTheme) {
               setSelectedTheme(result.themes[0]);
@@ -1171,7 +1132,6 @@ function ThemeSelector({
   ) => {
     if (!selectedTheme) return;
 
-    // Create a new theme object with the updated property
     const updatedTheme = {
       ...selectedTheme,
       [property]: value,
@@ -1329,7 +1289,6 @@ function ThemeSelector({
   );
 }
 
-// Animation Preview component
 function AnimationSelector({
   value,
   onChange,

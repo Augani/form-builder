@@ -8,7 +8,6 @@ export async function GET(
   try {
     const { id: formId } = await params;
 
-    // Get the form with fields
     const form = await prisma.form.findUnique({
       where: {
         id: formId,
@@ -31,7 +30,6 @@ export async function GET(
       );
     }
 
-    // Return the form for public consumption
     return NextResponse.json(form);
   } catch (error) {
     console.error("Error getting public form:", error);

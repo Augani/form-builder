@@ -40,7 +40,6 @@ const LoginPage = (): React.ReactNode => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Create validation schema with translated messages
   const loginSchema = z.object({
     email: z.string().email(t("invalidEmail")),
     password: z.string().min(6, t("passwordTooShort")),

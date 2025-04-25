@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-// Form theme type definition
 type ThemeType = {
   id: string;
   name: string;
@@ -22,7 +21,6 @@ type ThemeType = {
   borderRadius: number;
 };
 
-// Form data type (simplified version just for the thank you page)
 type FormData = {
   id: string;
   name: string;
@@ -42,13 +40,11 @@ export default function ThankYouPage() {
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        // Just fetch basic form info for the thank you page
         const response = await axios.get(`/api/public-forms/${formId}/basic`);
         const formData = response.data;
 
         setForm(formData);
 
-        // Format theme data
         if (formData.theme) {
           setFormTheme(formData.theme);
         }
@@ -62,7 +58,6 @@ export default function ThankYouPage() {
     fetchForm();
   }, [formId]);
 
-  // Generate styles based on theme
   const getStyles = () => {
     if (!formTheme) return {};
 

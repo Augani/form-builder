@@ -98,7 +98,6 @@ type ThemeType = {
   borderRadius: number;
 };
 
-// Sortable field component
 function SortableField({
   field,
   index,
@@ -188,7 +187,6 @@ function SortableField({
                   type: value,
                 };
 
-                // Add options array for select, radio, and checkbox types
                 if (
                   ["select", "radio", "checkbox"].includes(value) &&
                   !field.options
@@ -305,9 +303,7 @@ function SortableField({
   );
 }
 
-// Preview component to render a form field based on its type
 
-// Theme selector component
 function ThemeSelector({
   theme,
   onSelectTheme,
@@ -331,7 +327,6 @@ function ThemeSelector({
 
         if (result) {
           setThemes(result.themes);
-          // Set the first theme as default selected
           if (result.themes.length > 0) {
             if (!selectedTheme) {
               setSelectedTheme(result.themes[0]);
@@ -363,13 +358,11 @@ function ThemeSelector({
   ) => {
     if (!selectedTheme) return;
 
-    // Create a new theme object with the updated property
     const updatedTheme = {
       ...selectedTheme,
       [property]: value,
     };
 
-    // Log the change for debugging
     console.log(`Updating ${property} to ${value}`);
 
     setSelectedTheme(updatedTheme);
@@ -524,7 +517,6 @@ function ThemeSelector({
   );
 }
 
-// Animation Preview component
 function AnimationSelector({
   value,
   onChange,
@@ -623,7 +615,6 @@ export default function NewFormPage() {
   const [showAnimationPreview, setShowAnimationPreview] = useState(false);
   const [activeTab, setActiveTab] = useState("settings");
 
-  // Initialize dnd-kit sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -651,7 +642,6 @@ export default function NewFormPage() {
     mode: "onChange",
   });
 
-  // Define scrollToBottom before it's used in other functions
   const scrollToBottom = useCallback(() => {
     if (formFieldsContainerRef.current) {
       formFieldsContainerRef.current.scrollIntoView({ behavior: "smooth" });
@@ -687,7 +677,6 @@ export default function NewFormPage() {
     );
   };
 
-  // Handle drag end for field reordering
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -752,7 +741,6 @@ export default function NewFormPage() {
     );
   };
 
-  // When theme is selected, set its default animation if appropriate
   useEffect(() => {
     if (selectedTheme && selectedAnimation === "NONE") {
       setSelectedAnimation(selectedTheme.defaultAnimation);
@@ -762,7 +750,6 @@ export default function NewFormPage() {
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
 
-    // Validate that all fields have labels
     const hasEmptyLabels = formFields.some((field) => !field.label.trim());
     if (hasEmptyLabels) {
       toast.error(t("allFieldsNeedLabels"));
@@ -809,10 +796,8 @@ export default function NewFormPage() {
     }, 100);
   };
 
-  // Add keyboard shortcut for adding new fields
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      // Check if Alt+N is pressed (or Option+N on Mac)
       if ((event.altKey || event.metaKey) && event.key === "m") {
         event.preventDefault(); // Prevent default browser behavior
         addField();
@@ -820,26 +805,20 @@ export default function NewFormPage() {
       }
     };
 
-    // Add event listener
     window.addEventListener("keydown", handleKeyPress);
 
-    // Clean up event listener on component unmount
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, [addField, scrollToBottom]);
 
-  // Show tooltip on initial load
   useEffect(() => {
-    // Check if user has seen the tooltip before
     const hasSeenTooltip = localStorage.getItem("hasSeenAddFieldTooltip");
 
     if (!hasSeenTooltip) {
-      // Set a small delay to ensure the UI is rendered
       const timer = setTimeout(() => {
         setShowTooltip(true);
 
-        // Auto-hide tooltip after 5 seconds
         const hideTimer = setTimeout(() => {
           setShowTooltip(false);
           localStorage.setItem("hasSeenAddFieldTooltip", "true");

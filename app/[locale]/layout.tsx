@@ -33,10 +33,8 @@ export default async function LocaleLayout({
   params,
 }: Readonly<Props>) {
   const { locale } = await params;
-  // Validate locale and redirect if invalid
   if (!locales.includes(locale)) notFound();
 
-  // Set locale for server components
   setRequestLocale(locale);
 
   let messages;

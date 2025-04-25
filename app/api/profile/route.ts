@@ -4,19 +4,16 @@ import { auth } from "@/app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
-// GET: Fetch user profile data
 export async function GET() {
   try {
     const session = await auth();
 
-    // Check if user is authenticated
     if (!session || !session.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const userId = session.user.id;
 
-    // Fetch user data from database
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -26,7 +23,6 @@ export async function GET() {
         image: true,
         createdAt: true,
         updatedAt: true,
-        // Don't include password
       },
     });
 
@@ -34,7 +30,6 @@ export async function GET() {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Add role property to match the UI expectation
     const userData = {
       ...user,
       role: "user", // Default role, update this if you have role in your schema

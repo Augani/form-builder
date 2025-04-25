@@ -64,7 +64,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-// Type definitions for form preview
 type ThemeType = {
   id: string;
   name: string;
@@ -82,7 +81,6 @@ type ThemeType = {
   borderRadius: number;
 };
 
-// Type for response data from API
 type ResponseField = {
   value: string | string[];
   type: string;
@@ -108,7 +106,6 @@ type ResponsesData = {
   };
 };
 
-// Type for form data from API
 type FormData = {
   id: string;
   name: string;
@@ -177,7 +174,6 @@ export default function FormPreviewPage() {
         const result = response.data;
         setForm(result);
 
-        // Format theme data if it exists
         if (result.theme) {
           const theme: ThemeType = {
             id: result.theme.id,
@@ -197,7 +193,6 @@ export default function FormPreviewPage() {
           setFormTheme(theme);
         }
 
-        // Generate form URL
         const baseUrl = window.location.origin;
         setFormUrl(`${baseUrl}/submission/${formId}`);
       } catch (error) {
@@ -243,7 +238,6 @@ export default function FormPreviewPage() {
   const exportResponsesToCSV = () => {
     if (!form || !responses.length) return;
 
-    // Get all unique field labels across responses
     const fieldLabels = new Set<string>();
     responses.forEach((response) => {
       Object.keys(response.fields).forEach((label) => {
@@ -251,10 +245,8 @@ export default function FormPreviewPage() {
       });
     });
 
-    // Create headers row
     const headers = ["ID", "Email", "Submitted At", ...Array.from(fieldLabels)];
 
-    // Create CSV rows for each response
     const csvRows = [headers.join(",")];
 
     responses.forEach((response) => {
@@ -264,7 +256,6 @@ export default function FormPreviewPage() {
         new Date(response.createdAt).toLocaleString(),
       ];
 
-      // Add field values in the same order as headers
       Array.from(fieldLabels).forEach((label) => {
         const field = response.fields[label];
         row.push(field ? `"${field.value}"` : "");
@@ -273,7 +264,6 @@ export default function FormPreviewPage() {
       csvRows.push(row.join(","));
     });
 
-    // Create and download CSV file
     const csvContent = csvRows.join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);

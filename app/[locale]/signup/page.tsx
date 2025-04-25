@@ -27,7 +27,6 @@ export default function SignupPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Create validation schema with translated messages
   const signupSchema = z
     .object({
       name: z.string().min(2, t("error.nameTooShort")).optional(),

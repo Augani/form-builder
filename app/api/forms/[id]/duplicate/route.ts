@@ -17,7 +17,6 @@ export async function POST(
 
     const formId = params.id;
 
-    // Check if the form exists and belongs to the user
     const existingForm = await prisma.form.findFirst({
       where: {
         id: formId,
@@ -35,8 +34,6 @@ export async function POST(
       );
     }
 
-    // Create a new form with the same data but set status to draft
-    // Using rest/spread to omit specific fields
     const { fields, ...formDataWithoutFields } = existingForm;
 
     const newForm = await prisma.form.create({
@@ -45,10 +42,7 @@ export async function POST(
         name: `${formDataWithoutFields.name} (Copy)`,
         status: "DRAFT",
         fields: {
-          // Excluding id and formId as they'll be auto-generated
           create: fields.map((field) => {
-            // Extract only the fields we want to copy, excluding id and formId
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id, formId, ...fieldData } = field;
             return fieldData;
           }),

@@ -17,7 +17,6 @@ export async function PUT(
 
     const formId = params.id;
 
-    // Check if the form exists and belongs to the user
     const form = await prisma.form.findFirst({
       where: {
         id: formId,
@@ -32,7 +31,6 @@ export async function PUT(
       );
     }
 
-    // Update the form status to active
     const updatedForm = await prisma.form.update({
       where: { id: formId },
       data: { status: "ACTIVE" },

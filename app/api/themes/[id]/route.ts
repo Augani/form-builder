@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { Animation, FormLayout, FormSpacing } from "@prisma/client";
 
-// Schema for theme update
 const themeUpdateSchema = z.object({
   name: z
     .string()
@@ -47,7 +46,6 @@ export async function GET(
     const session = await auth();
     const themeId = params.id;
 
-    // Fetch the theme
     const theme = await prisma.theme.findUnique({
       where: { id: themeId },
     });
@@ -56,7 +54,6 @@ export async function GET(
       return NextResponse.json({ error: "Theme not found" }, { status: 404 });
     }
 
-    // Check if the theme is public or if the user owns it
     if (
       !theme.isPublic &&
       (!session?.user || theme.userId !== session.user.id)
@@ -91,7 +88,6 @@ export async function PUT(
     const themeId = params.id;
     const body = await req.json();
 
-    // Validate request body
     const validationResult = themeUpdateSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
@@ -100,7 +96,6 @@ export async function PUT(
       );
     }
 
-    // Check if theme exists and belongs to the user
     const existingTheme = await prisma.theme.findUnique({
       where: { id: themeId },
     });
@@ -116,7 +111,6 @@ export async function PUT(
       );
     }
 
-    // Update the theme
     const updatedTheme = await prisma.theme.update({
       where: { id: themeId },
       data: validationResult.data,
@@ -145,7 +139,6 @@ export async function DELETE(
 
     const themeId = params.id;
 
-    // Check if theme exists and belongs to the user
     const existingTheme = await prisma.theme.findUnique({
       where: { id: themeId },
     });
@@ -161,7 +154,6 @@ export async function DELETE(
       );
     }
 
-    // Check if theme is being used by any forms
     const formCount = await prisma.form.count({
       where: { themeId },
     });
@@ -176,7 +168,6 @@ export async function DELETE(
       );
     }
 
-    // Delete the theme
     await prisma.theme.delete({
       where: { id: themeId },
     });

@@ -10,12 +10,10 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    //    get all public themes
     const publicThemes = await prisma.theme.findMany({
       where: { isPublic: true },
     });
 
-    // get all user themes
     const userThemes = await prisma.theme.findMany({
       where: { userId: session.user.id },
     });

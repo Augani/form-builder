@@ -58,7 +58,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     },
   ];
 
-  // For mobile navigation - including logout
   const mobileNavItems = [
     ...navItems.slice(0, 4),
     {

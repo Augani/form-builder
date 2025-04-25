@@ -4,7 +4,6 @@ import { locales, defaultLocale } from "@/i18n";
 type LocaleType = (typeof locales)[number];
 
 export default getRequestConfig(async ({ locale }) => {
-  // Validate the locale is supported
   const safeLocale =
     locale && locales.includes(locale as LocaleType) ? locale : defaultLocale;
 

@@ -5,7 +5,6 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-// Schema for validation
 const userSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -16,7 +15,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate input
     const result = userSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
@@ -27,7 +25,6 @@ export async function POST(request: NextRequest) {
 
     const { email, password, name } = result.data;
 
-    // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -39,10 +36,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash password
     const hashedPassword = await hash(password, 10);
 
-    // Create user
     const newUser = await prisma.user.create({
       data: {
         email,
@@ -51,7 +46,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Return user without password
     const userData = {
       id: newUser.id,
       email: newUser.email,

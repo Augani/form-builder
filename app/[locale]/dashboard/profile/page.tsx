@@ -45,7 +45,6 @@ export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch user profile data
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -84,7 +83,6 @@ export default function ProfilePage() {
     mode: "onChange",
   });
 
-  // Update form values when user data is loaded
   useEffect(() => {
     if (user) {
       form.reset({

@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 
-// This is a fallback metadata that will be used if dynamic metadata generation fails
 export const metadata: Metadata = {
   title: "Snapform - Form Builder",
   description: "Create custom forms dynamically with ease",

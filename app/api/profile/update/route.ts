@@ -5,18 +5,15 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-// Schema for validation
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
 });
 
-// PATCH: Update user profile data
 export async function PATCH(request: NextRequest) {
   try {
     const session = await auth();
 
-    // Check if user is authenticated
     if (!session || !session.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -24,7 +21,6 @@ export async function PATCH(request: NextRequest) {
     const userId = session.user.id;
     const body = await request.json();
 
-    // Validate input data
     const result = profileSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
@@ -35,7 +31,6 @@ export async function PATCH(request: NextRequest) {
 
     const { name, email } = result.data;
 
-    // Check if the email is already taken by another user
     if (email !== session.user.email) {
       const existingUser = await prisma.user.findUnique({
         where: { email },
@@ -49,7 +44,6 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    // Update user profile
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
@@ -66,7 +60,6 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
-    // Add role property to match the UI expectation
     const userData = {
       ...updatedUser,
       role: "user", // Default role, update this if you have role in your schema

@@ -36,7 +36,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 
-// Form field type definitions
 type FieldType = {
   id: string;
   formId: string;
@@ -48,7 +47,6 @@ type FieldType = {
   order: number;
 };
 
-// Form theme type definition
 type ThemeType = {
   id: string;
   name: string;
@@ -62,7 +60,6 @@ type ThemeType = {
   borderRadius: number;
 };
 
-// Form data type
 type FormData = {
   id: string;
   name: string;
@@ -86,7 +83,6 @@ type FormData = {
   theme?: ThemeType;
 };
 
-// Define TypeScript types for form values
 interface FormValues {
   email?: string;
   [key: string]: string | string[] | undefined;
@@ -104,7 +100,6 @@ export default function FormSubmissionPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [fields, setFields] = useState<FieldType[]>([]);
 
-  // Generate dynamic schema based on form fields
   const generateFormSchema = (fields: FieldType[]) => {
     const schemaFields: Record<string, z.ZodTypeAny> = {};
     if (form?.collectEmails) {
@@ -122,7 +117,6 @@ export default function FormSubmissionPage() {
           .string()
           .email(t("invalidEmail", { label: field.label }));
       } else if (field.type === "number") {
-        // Handle number type specially to avoid type conflicts
         if (field.required) {
           schemaFields[key] = z
             .string()
@@ -142,7 +136,6 @@ export default function FormSubmissionPage() {
             );
         }
       } else {
-        // For non-number fields, apply the required constraint normally
         schemaFields[key] = field.required
           ? fieldSchema.min(1, t("fieldRequired", { label: field.label }))
           : fieldSchema.optional();
@@ -151,18 +144,15 @@ export default function FormSubmissionPage() {
     return z.object(schemaFields);
   };
 
-  // Create default form values for all fields
   const generateDefaultValues = (formData: FormData | null): FormValues => {
     if (!formData) return {};
 
     const defaults: FormValues = {};
 
-    // Initialize email field if email collection is enabled
     if (formData.collectEmails) {
       defaults.email = "";
     }
 
-    // Initialize all form fields with empty values
     formData.fields.forEach((field) => {
       const key = `field_${field.id}`;
       if (field.type === "checkbox") {
@@ -175,29 +165,23 @@ export default function FormSubmissionPage() {
     return defaults;
   };
 
-  // Build Zod schema
   const schema = form?.fields ? generateFormSchema(form.fields) : z.object({});
 
-  // Initialize form with empty default values first
   const formHook = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: generateDefaultValues(form),
   });
 
-  // Watch all form values to calculate progress
   const formValues = formHook.watch();
 
-  // Calculate progress based on filled fields
   const calculateProgress = () => {
     if (!form) return 0;
 
-    // Get all field keys (including email if needed)
     const fieldKeys = fields.map((field) => `field_${field.id}`);
     if (form.collectEmails) {
       fieldKeys.push("email");
     }
 
-    // Count filled fields (non-empty values)
     const filledFields = fieldKeys.filter((key) => {
       const value = formValues[key];
       if (Array.isArray(value)) {
@@ -206,11 +190,9 @@ export default function FormSubmissionPage() {
       return !!value;
     }).length;
 
-    // Calculate percentage
     return fieldKeys.length > 0 ? (filledFields / fieldKeys.length) * 100 : 0;
   };
 
-  // Fetch form and theme
   useEffect(() => {
     const fetchForm = async () => {
       try {
@@ -218,7 +200,6 @@ export default function FormSubmissionPage() {
         const data = response.data;
         setForm(data);
 
-        // Apply shuffling if enabled
         let fieldsToRender = [...data.fields];
         if (data.shuffleQuestions) {
           fieldsToRender = [...fieldsToRender].sort(() => Math.random() - 0.5);
@@ -229,7 +210,6 @@ export default function FormSubmissionPage() {
 
         if (data.theme) setFormTheme(data.theme);
 
-        // Reset form with default values after fetching
         formHook.reset(generateDefaultValues(data));
       } catch (error) {
         console.error(error);
@@ -241,7 +221,6 @@ export default function FormSubmissionPage() {
     fetchForm();
   }, [formId, t, formHook]);
 
-  // Set CSS variable before render completes
   useEffect(() => {
     const radius = formTheme?.borderRadius ?? form?.borderRadius ?? 4;
     document.documentElement.style.setProperty(
@@ -250,17 +229,13 @@ export default function FormSubmissionPage() {
     );
   }, [form, formTheme]);
 
-  // Determine steps for the form (when layout is "step")
   const steps = useMemo(() => {
     if (!form || !fields.length) return [];
 
-    // If not using step layout, everything is one step
     if (form.layout !== "step") {
       return [fields];
     }
 
-    // For step layout, each field is its own step
-    // Email collection (if enabled) is the first step
     const allSteps = [];
     if (form.collectEmails) {
       allSteps.push([
@@ -277,7 +252,6 @@ export default function FormSubmissionPage() {
       ]);
     }
 
-    // Add remaining fields as individual steps
     fields.forEach((field) => {
       allSteps.push([field]);
     });
@@ -291,27 +265,23 @@ export default function FormSubmissionPage() {
     ? ((currentStep + 1) / totalSteps) * 100
     : calculateProgress();
 
-  // Handle next step in multi-step form
   const handleNextStep = async () => {
     const fieldsInCurrentStep = steps[currentStep];
     const fieldIds = fieldsInCurrentStep.map((f) =>
       f.id === "email" ? "email" : `field_${f.id}`
     );
 
-    // Validate only the fields in the current step
     const isValid = await formHook.trigger(fieldIds);
 
     if (isValid) {
       if (currentStep < totalSteps - 1) {
         setCurrentStep((prev) => prev + 1);
       } else {
-        // If this is the last step, submit the form
         await formHook.handleSubmit(onSubmit)();
       }
     }
   };
 
-  // Handle previous step in multi-step form
   const handlePreviousStep = () => {
     if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
@@ -367,7 +337,6 @@ export default function FormSubmissionPage() {
     }
   };
 
-  // Get animation settings based on form configuration
   const getAnimationSettings = () => {
     const speed = {
       SLOW: 0.8,
@@ -414,7 +383,6 @@ export default function FormSubmissionPage() {
       },
     };
 
-    // Convert animation name to lowercase and match with available animations
     const animationKey =
       form.animation?.toLowerCase() === "none"
         ? "none"
@@ -425,7 +393,6 @@ export default function FormSubmissionPage() {
     );
   };
 
-  // Compute inline styles
   const styles = (() => {
     const radius = formTheme?.borderRadius ?? form?.borderRadius ?? 4;
     const spacingMap = {
@@ -488,7 +455,6 @@ export default function FormSubmissionPage() {
     };
   })();
 
-  // Get fields to display based on the current form state
   const getFieldsToDisplay = () => {
     if (!isStepLayout) {
       return fields;
@@ -499,7 +465,6 @@ export default function FormSubmissionPage() {
   const renderFormField = (field: FieldType) => {
     const key = `field_${field.id}`;
 
-    // Regular field rendering based on type
     switch (field.type.toLowerCase()) {
       case "text":
       case "email":

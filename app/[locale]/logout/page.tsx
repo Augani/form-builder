@@ -19,14 +19,12 @@ export default function LogoutPage() {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Function to handle logout
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await signOut({ redirect: false });
     router.push("/login");
   };
 
-  // Auto logout after 3 seconds if user doesn't click the button
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!isLoggingOut) {

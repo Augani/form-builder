@@ -2,7 +2,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { SortableField } from "@/components/form-builder/sortable-field";
 import { DndContext } from "@dnd-kit/core";
 
-// Mock the useSortable hook
 jest.mock("@dnd-kit/sortable", () => ({
   useSortable: () => ({
     attributes: {},
@@ -14,7 +13,6 @@ jest.mock("@dnd-kit/sortable", () => ({
   }),
 }));
 
-// Mock the useTranslations hook
 jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
@@ -46,10 +44,8 @@ describe("SortableField", () => {
       </DndContext>
     );
 
-    // Get elements by label text since that will be translated to just the key in our mocked internationalization
     expect(screen.getByLabelText("label")).toHaveValue("Test Field");
 
-    // Just check that the form contains the field type text
     expect(screen.getByText("text")).toBeInTheDocument();
   });
 
@@ -76,11 +72,9 @@ describe("SortableField", () => {
       </DndContext>
     );
 
-    // Find the select trigger and open it
     const typeSelect = screen.getByLabelText("type");
     fireEvent.click(typeSelect);
 
-    // Find and click the email option
     const emailOption = screen.getByText("email");
     fireEvent.click(emailOption);
 
@@ -96,7 +90,6 @@ describe("SortableField", () => {
       </DndContext>
     );
 
-    // Find the delete button using its title attribute which will be the translation key
     const deleteButton = screen.getByTitle("remove");
     fireEvent.click(deleteButton);
 
@@ -126,7 +119,6 @@ describe("SortableField", () => {
       </DndContext>
     );
 
-    // In our mocked internationalization, these will just use the key as the text
     expect(screen.getByText("options")).toBeInTheDocument();
     expect(screen.getByText("addOption")).toBeInTheDocument();
   });
@@ -144,7 +136,6 @@ describe("SortableField", () => {
       </DndContext>
     );
 
-    // The button contains the text addOption in our mock
     const addButton = screen.getByText("addOption");
     fireEvent.click(addButton);
 

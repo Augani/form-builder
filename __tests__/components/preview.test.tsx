@@ -3,12 +3,10 @@ import { FormPreview } from "@/components/preview";
 import { Animation, FormLayout, FormSpacing } from "@prisma/client";
 import { ReactNode, HTMLAttributes } from "react";
 
-// Mock the useTranslations hook
 jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
-// Mock the framer-motion
 jest.mock("framer-motion", () => ({
   motion: {
     div: ({
@@ -70,7 +68,6 @@ describe("FormPreview", () => {
   it("renders all form fields", () => {
     render(<FormPreview formName="Test Form" fields={mockFields} />);
 
-    // Use queryByText or getByText instead of getByLabelText which has issues with the component structure
     expect(screen.getByText("Text Field")).toBeInTheDocument();
     expect(screen.getByText("Select Field")).toBeInTheDocument();
   });
@@ -80,7 +77,6 @@ describe("FormPreview", () => {
       <FormPreview formName="Test Form" fields={mockFields} theme={mockTheme} />
     );
 
-    // Instead of looking for a data-testid, check the card element
     const formElement = screen.getByText("Test Form").closest(".bg-card");
     expect(formElement).toHaveStyle({
       backgroundColor: "#f0f0f0",
@@ -140,7 +136,6 @@ describe("FormPreview", () => {
 
     render(<FormPreview formName="Test Form" fields={fieldsWithAllTypes} />);
 
-    // Use getByText instead of getByLabelText
     expect(screen.getByText("Text Field")).toBeInTheDocument();
     expect(screen.getByText("Select Field")).toBeInTheDocument();
     expect(screen.getByText("Textarea Field")).toBeInTheDocument();
@@ -151,12 +146,10 @@ describe("FormPreview", () => {
   it("shows required field indicators", () => {
     render(<FormPreview formName="Test Form" fields={mockFields} />);
 
-    // Get the required field label and check if it contains an asterisk
     const fieldLabels = screen.getAllByText(/Text Field/);
     const fieldLabel = fieldLabels[0];
     expect(fieldLabel).toBeInTheDocument();
 
-    // Check if there's an asterisk in the page
     expect(screen.getByText("*")).toBeInTheDocument();
   });
 });
