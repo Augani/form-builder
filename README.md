@@ -159,10 +159,10 @@ npm test -- --coverage
 
 Tests are written using **Jest** and **@testing-library/react**, focusing on:
 - Component rendering
-- Form validation
-- User interactions
-- API endpoints
-- Database operations
+- Form validation (yet to be implemented because of time constraints)
+- User interactions (yet to be implemented because of time constraints)
+- API endpoints (yet to be implemented because of time constraints)
+- Database operations (yet to be implemented because of time constraints)
 
 ---
 
