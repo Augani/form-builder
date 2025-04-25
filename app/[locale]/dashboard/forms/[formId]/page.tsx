@@ -352,7 +352,6 @@ export default function FormPreviewPage() {
 
   return (
     <div className="container mx-auto px-4 py-4 space-y-4">
-      {/* Header Section */}
       <div className="flex flex-col gap-4">
         <div>
           <h1 className="text-xl font-bold">{form.name}</h1>
@@ -401,7 +400,6 @@ export default function FormPreviewPage() {
         </div>
       </div>
 
-      {/* Tabs Section */}
       <Tabs
         defaultValue="preview"
         className="w-full"
@@ -685,7 +683,6 @@ export default function FormPreviewPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Publish Dialog */}
       <AlertDialog open={publishDialogOpen} onOpenChange={setPublishDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -705,7 +702,6 @@ export default function FormPreviewPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Share Dialog */}
       <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
         <DialogContent>
           <DialogHeader>

@@ -664,7 +664,6 @@ export default function FormSubmissionPage() {
               <p className="text-muted-foreground mt-2">{form.description}</p>
             )}
 
-            {/* Progress bar */}
             {form.showProgressBar && (
               <div className="mt-4">
                 <Progress
@@ -730,14 +729,12 @@ export default function FormSubmissionPage() {
                       />
                     )}
 
-                    {/* Render fields appropriate for the current step or layout */}
                     <div className={styles.spacingClass}>
                       {fieldsToDisplay.map((field) => renderFormField(field))}
                     </div>
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Navigation buttons for step layout */}
                 {isStepLayout ? (
                   <div className="flex justify-between mt-6">
                     <Button

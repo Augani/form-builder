@@ -69,7 +69,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-      {/* Desktop Sidebar */}
       <div className="w-20 flex-shrink-0 border-r bg-background hidden md:flex md:flex-col">
         <div className="flex h-16 items-center justify-center border-b">
           <Link href="/dashboard">
@@ -125,12 +124,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         <main className="flex-1 overflow-y-auto pb-16 md:pb-0">{children}</main>
       </div>
 
-      {/* Mobile Bottom Bar */}
       <div className="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-background border-t flex items-center justify-around px-4">
         {mobileNavItems.map((item) => (
           <Link

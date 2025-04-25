@@ -830,7 +830,6 @@ export default function EditFormPage() {
                     </SortableContext>
                   </DndContext>
 
-                  {/* Add Field Button UI */}
                   <div className="mt-6 space-y-4">
                     <div className="flex justify-between items-center">
                       <h3 className="text-sm font-medium">

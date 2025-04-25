@@ -342,7 +342,6 @@ export const FormPreview = ({
           <p className="text-muted-foreground mt-2">{formDescription}</p>
         )}
 
-        {/* Progress bar */}
         {showProgressBar && (
           <div className="mt-4">
             <Progress

@@ -15,28 +15,20 @@ const Home = (): React.ReactNode => {
   const t = useTranslations("home");
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 relative overflow-hidden">
-      {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top left decorative circle */}
         <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full bg-primary/10 blur-3xl" />
 
-        {/* Bottom right decorative circle */}
         <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full bg-primary/10 blur-3xl" />
 
-        {/* Diagonal lines pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(var(--primary),0.1)_50%,transparent_75%)] bg-[length:250%_250%] animate-[gradient_15s_ease_infinite]" />
 
-        {/* Grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary),0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--primary),0.15)_1px,transparent_1px)] bg-[size:3rem_3rem]" />
 
-        {/* Vertical lines */}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(var(--primary),0.05)_50%,transparent_100%)] bg-[length:100%_100%]" />
 
-        {/* Horizontal lines */}
         <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(var(--primary),0.05)_50%,transparent_100%)] bg-[length:100%_100%]" />
       </div>
 
-      {/* Hero Section */}
       <div className="container mx-auto px-4 pt-16 lg:pt-24 relative z-10">
         <div className="flex flex-col items-center gap-8 text-center">
           <div className="flex items-center gap-2">
@@ -74,7 +66,6 @@ const Home = (): React.ReactNode => {
         </div>
       </div>
 
-      {/* Features Section */}
       <div className="container mx-auto px-4 py-20 relative z-10">
         <h2 className="text-3xl font-bold text-center mb-12">
           {t("whyChoose")}
@@ -362,7 +353,6 @@ const Home = (): React.ReactNode => {
         </div>
       </div>
 
-      {/* CTA Section */}
       <div className="container mx-auto px-4 py-16 text-center relative z-10">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-4">{t("readyToStart")}</h2>
@@ -380,7 +370,6 @@ const Home = (): React.ReactNode => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="bg-card/50 backdrop-blur-sm py-8 relative z-10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">

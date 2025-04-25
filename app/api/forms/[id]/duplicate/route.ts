@@ -43,6 +43,7 @@ export async function POST(
         status: "DRAFT",
         fields: {
           create: fields.map((field) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id, formId, ...fieldData } = field;
             return fieldData;
           }),

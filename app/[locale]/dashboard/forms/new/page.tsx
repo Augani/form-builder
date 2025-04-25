@@ -1086,7 +1086,6 @@ export default function NewFormPage() {
             </TabsContent>
           </Tabs>
 
-          {/* Fixed floating button for adding fields */}
           <div className="fixed md:hidden bottom-20 right-2 z-50">
             <TooltipProvider>
               <Tooltip open={showTooltip} onOpenChange={setShowTooltip}>

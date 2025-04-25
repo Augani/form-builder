@@ -108,7 +108,6 @@ export function SortableField({
       style={style}
       className="p-4 border rounded-md relative"
     >
-      {/* Field header with drag handle and delete button */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <div
@@ -123,7 +122,6 @@ export function SortableField({
             {fieldT("header", { index: index + 1 })}
           </h3>
         </div>
-        {/* Always show the delete button */}
         <Button
           variant="ghost"
           size="sm"
@@ -140,10 +138,8 @@ export function SortableField({
         </Button>
       </div>
 
-      {/* Field configuration options */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Field Label */}
           <div>
             <Label htmlFor={`field-${field.id}-label`}>{fieldT("label")}</Label>
             <Input
@@ -156,7 +152,6 @@ export function SortableField({
             />
           </div>
 
-          {/* Field Type */}
           <div>
             <Label htmlFor={`field-${field.id}-type`}>{fieldT("type")}</Label>
             <Select value={field.type} onValueChange={handleTypeChange}>
@@ -181,7 +176,6 @@ export function SortableField({
           </div>
         </div>
 
-        {/* Placeholder for text-based fields */}
         {(field.type === "text" ||
           field.type === "email" ||
           field.type === "number" ||
@@ -200,7 +194,6 @@ export function SortableField({
           </div>
         )}
 
-        {/* Options for select, radio, and checkbox types */}
         {(field.type === "select" ||
           field.type === "radio" ||
           field.type === "checkbox") &&
@@ -250,7 +243,6 @@ export function SortableField({
             </div>
           )}
 
-        {/* Required field toggle */}
         <div className="flex items-center space-x-2 pt-2">
           <Switch
             id={`field-${field.id}-required`}
