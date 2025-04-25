@@ -55,7 +55,6 @@ export default function FormsListPage() {
       try {
         const response = await apiClient.get("/api/forms");
         const result = response.data;
-        console.log(result);
         setForms(result.forms);
       } catch (error) {
         console.error("Error fetching forms:", error);

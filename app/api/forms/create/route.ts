@@ -68,9 +68,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Session user:", session.user);
-    console.log("User ID:", session.user.id);
-
     const body = await req.json();
 
     const validatedData = formSchema.parse(body);

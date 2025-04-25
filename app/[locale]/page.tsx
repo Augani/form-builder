@@ -1,380 +1,382 @@
 "use client";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 
 const Home = (): React.ReactNode => {
   const t = useTranslations("home");
+  const [scrollY, setScrollY] = useState(0);
+  const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const autoSwipeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+      },
+    }),
+  };
+
+  const features = [
+    {
+      title: t("easyToUse"),
+      description: t("easyToUseDesc"),
+      image: "/snapform/easy-to-use.png",
+    },
+    {
+      title: t("customizable"),
+      description: t("customizableDesc"),
+      image: "/snapform/customize.png",
+    },
+    {
+      title: t("responsive"),
+      description: t("responsiveDesc"),
+      image: "/snapform/responsive.png",
+    },
+    {
+      title: "Multiple Field Types",
+      description:
+        "Choose from text, email, number, textarea, select, radio, checkbox, and date fields.",
+      image: "/snapform/customize.png",
+    },
+    {
+      title: "Form Analytics",
+      description:
+        "Track responses, completion rates, and user engagement with detailed analytics.",
+      image: "/snapform/analytics.png",
+    },
+    {
+      title: "Secure & Reliable",
+      description:
+        "Your data is protected with industry-standard security measures and encryption.",
+      image: "/snapform/secure.png",
+    },
+    {
+      title: t("dragAndDrop"),
+      description: t("dragAndDropDesc"),
+      image: "/snapform/easy-to-use.png",
+    },
+    {
+      title: t("livePreview"),
+      description: t("livePreviewDesc"),
+      image: "/snapform/live-preview.png",
+    },
+    {
+      title: t("customThemes"),
+      description: t("customThemesDesc"),
+      image: "/snapform/customize.png",
+    },
+  ];
+
+  const handleMouseEnter = () => {
+    if (autoSwipeTimerRef.current) {
+      clearInterval(autoSwipeTimerRef.current);
+    }
+
+    autoSwipeTimerRef.current = setInterval(() => {
+      setActiveFeatureIndex((prevIndex) =>
+        prevIndex === features.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 2000);
+  };
+
+  const handleMouseLeave = () => {
+    if (autoSwipeTimerRef.current) {
+      clearInterval(autoSwipeTimerRef.current);
+      autoSwipeTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (autoSwipeTimerRef.current) {
+        clearInterval(autoSwipeTimerRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-background via-primary/5 to-secondary/20 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/20 blur-3xl animate-pulse" />
 
-        <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-secondary/20 blur-3xl animate-pulse" />
 
-        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(var(--primary),0.1)_50%,transparent_75%)] bg-[length:250%_250%] animate-[gradient_15s_ease_infinite]" />
+        <div
+          className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-accent/20 blur-3xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
 
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary),0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--primary),0.15)_1px,transparent_1px)] bg-[size:3rem_3rem]" />
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(var(--primary),0.2)_50%,transparent_75%)] bg-[length:250%_250%] animate-[gradient_15s_ease_infinite]" />
 
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(var(--primary),0.05)_50%,transparent_100%)] bg-[length:100%_100%]" />
+        <div
+          className="absolute inset-0 bg-[linear-gradient(rgba(var(--primary),0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--primary),0.1)_1px,transparent_1px)] bg-[size:3rem_3rem]"
+          style={{ backgroundPositionY: `${scrollY * 0.2}px` }}
+        />
 
-        <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(var(--primary),0.05)_50%,transparent_100%)] bg-[length:100%_100%]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(var(--primary),0.1)_0%,transparent_70%)]" />
       </div>
 
       <div className="container mx-auto px-4 pt-16 lg:pt-24 relative z-10">
         <div className="flex flex-col items-center gap-8 text-center">
-          <div className="flex items-center gap-2">
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-2"
+          >
             <Image
               src="/logo.svg"
               alt="Snapform Logo"
-              width={100}
-              height={100}
+              width={120}
+              height={120}
               priority
-              className="dark:invert"
+              className="dark:invert drop-shadow-xl"
             />
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+          <motion.h1
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-gradient bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+          >
             {t("createForms")}{" "}
-            <span className="text-primary">{t("effortlessly")}</span>
-          </h1>
+            <span className="italic bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent">
+              {t("effortlessly")}
+            </span>
+          </motion.h1>
 
-          <p className="max-w-[600px] text-lg text-muted-foreground">
+          <motion.p
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="max-w-[700px] text-xl leading-relaxed text-foreground/80"
+          >
             {t("buildForms")}
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="flex flex-col sm:flex-row gap-6 mt-4"
+          >
             <Link href="/login">
-              <Button size="lg" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+              >
                 {t("loginToDashboard")}
               </Button>
             </Link>
             <Link href="/signup">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold rounded-xl bg-background/80 backdrop-blur-sm hover:bg-background/90 transition-all duration-300 border-2"
+              >
                 {t("signUp")}
               </Button>
             </Link>
-          </div>
+          </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="flex justify-center mt-24 mb-8"
+        >
+          <div className="relative w-full max-w-4xl h-[300px] sm:h-[400px] rounded-xl overflow-hidden shadow-2xl">
+            <Image
+              src="/dash.png"
+              alt="Form Builder Dashboard"
+              fill
+              style={{ objectFit: "cover" }}
+              className="hover:scale-105 object-top hover:object-bottom transition-all duration-1000 ease-in-out"
+            />
+            <div className="absolute bottom-4 left-4 right-4 text-white">
+              <h3 className="text-xl font-semibold">
+                Powerful Form Builder Dashboard
+              </h3>
+              <p className="text-sm text-white/80">
+                Create, manage, and analyze all your forms in one place
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       <div className="container mx-auto px-4 py-20 relative z-10">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          {t("whyChoose")}
-        </h2>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-bold text-center mb-4"
+        >
+          <span className="relative inline-block">
+            {t("whyChoose")}
+            <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></span>
+          </span>
+        </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("easyToUse")}</CardTitle>
-              <CardDescription>{t("easyToUseDesc")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <rect width="18" height="18" x="3" y="3" rx="2" />
-                  <path d="M7 7h10" />
-                  <path d="M7 12h10" />
-                  <path d="M7 17h10" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-center text-muted-foreground max-w-2xl mx-auto mb-16"
+        >
+          Snapform provides all the tools you need to create beautiful,
+          functional forms without any coding
+        </motion.p>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("customizable")}</CardTitle>
-              <CardDescription>{t("customizableDesc")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
-                  <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-                  <path d="M12 2v2" />
-                  <path d="M12 22v-2" />
-                  <path d="m17 20.66-1-1.73" />
-                  <path d="M11 10.27 7 3.34" />
-                  <path d="m20.66 17-1.73-1" />
-                  <path d="m3.34 7 1.73 1" />
-                  <path d="M14 12h8" />
-                  <path d="M2 12h2" />
-                  <path d="m20.66 7-1.73 1" />
-                  <path d="m3.34 17 1.73-1" />
-                  <path d="m17 3.34-1 1.73" />
-                  <path d="m7 20.66 1-1.73" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
+        <div
+          ref={carouselRef}
+          className="relative overflow-hidden"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <motion.div
+            className="flex flex-nowrap"
+            animate={{
+              x: `-${activeFeatureIndex * 100}%`,
+            }}
+            transition={{ type: "spring", stiffness: 150, damping: 30 }}
+          >
+            {features.map((feature, i) => (
+              <motion.div
+                key={i}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                variants={cardVariants}
+                className="w-full shrink-0 flex flex-col md:flex-row"
+              >
+                <div className="w-full md:w-1/2 p-6">
+                  <Card
+                    className={`h-full overflow-hidden transition-all duration-300 hover:shadow-xl ${
+                      activeFeatureIndex === i
+                        ? "border-primary/100 scale-105"
+                        : "border-primary/30"
+                    }`}
+                  >
+                    <CardContent className="p-0 h-full">
+                      <div
+                        className={`w-full h-80 flex items-center justify-center transition-all duration-500 relative ${
+                          activeFeatureIndex === i ? "" : "grayscale"
+                        }`}
+                      >
+                        <Image
+                          src={feature.image}
+                          alt={feature.title}
+                          fill
+                          className="object-cover object-top"
+                          priority={i === 0}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("responsive")}</CardTitle>
-              <CardDescription>{t("responsiveDesc")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <rect width="16" height="20" x="4" y="2" rx="2" />
-                  <path d="M12 18h.01" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="w-full md:w-1/2 p-6">
+                  <div
+                    className={`h-full flex flex-col justify-center transition-opacity duration-500 ${
+                      activeFeatureIndex === i ? "opacity-100" : "opacity-40"
+                    }`}
+                  >
+                    <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                      {feature.title}
+                    </h3>
+                    <p className="text-lg text-foreground/80">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Multiple Field Types</CardTitle>
-              <CardDescription>
-                Choose from text, email, number, textarea, select, radio,
-                checkbox, and date fields.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
-                  <path d="M18 14h-8" />
-                  <path d="M15 18h-5" />
-                  <path d="M10 6h8v4h-8V6Z" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Form Analytics</CardTitle>
-              <CardDescription>
-                Track responses, completion rates, and user engagement with
-                detailed analytics.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="M3 3v18h18" />
-                  <path d="m19 9-5 5-4-4-3 3" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Secure & Reliable</CardTitle>
-              <CardDescription>
-                Your data is protected with industry-standard security measures
-                and encryption.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("dragAndDrop")}</CardTitle>
-              <CardDescription>{t("dragAndDropDesc")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="M5 3v4" />
-                  <path d="M3 5h4" />
-                  <path d="M11 3v4" />
-                  <path d="M9 5h4" />
-                  <path d="M5 11v4" />
-                  <path d="M3 9h4" />
-                  <path d="M11 11v4" />
-                  <path d="M9 9h4" />
-                  <path d="M17 3v4" />
-                  <path d="M15 5h4" />
-                  <path d="M17 11v4" />
-                  <path d="M15 9h4" />
-                  <path d="M5 17v4" />
-                  <path d="M3 15h4" />
-                  <path d="M11 17v4" />
-                  <path d="M9 15h4" />
-                  <path d="M17 17v4" />
-                  <path d="M15 15h4" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("livePreview")}</CardTitle>
-              <CardDescription>{t("livePreviewDesc")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <rect width="18" height="18" x="3" y="3" rx="2" />
-                  <path d="M7 7h10" />
-                  <path d="M7 12h10" />
-                  <path d="M7 17h10" />
-                  <path d="M3 3v18h18" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("customThemes")}</CardTitle>
-              <CardDescription>{t("customThemesDesc")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-32 flex items-center justify-center bg-primary/10 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-                </svg>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-16 text-center relative z-10">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold mb-4">{t("readyToStart")}</h2>
-          <p className="text-lg text-muted-foreground mb-8">{t("joinUsers")}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup">
-              <Button size="lg">{t("signUp")}</Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="outline" size="lg">
-                {t("loginToDashboard")}
-              </Button>
-            </Link>
+          <div className="flex justify-center gap-2 mt-8">
+            {features.map((_, i) => (
+              <button
+                key={i}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  activeFeatureIndex === i ? "bg-primary w-6" : "bg-primary/30"
+                }`}
+                onClick={() => setActiveFeatureIndex(i)}
+              />
+            ))}
           </div>
         </div>
       </div>
 
-      <footer className="bg-card/50 backdrop-blur-sm py-8 relative z-10">
+      <div className="container mx-auto px-4 py-16 my-10 rounded-2xl bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-md relative z-10">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              {t("readyToStart")}
+            </h2>
+            <p className="text-xl text-foreground/80 mb-10">{t("joinUsers")}</p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Link href="/signup">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto px-8 py-6 text-lg font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+                >
+                  {t("signUp")}
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto px-8 py-6 text-lg font-semibold rounded-xl bg-background/80 backdrop-blur-sm hover:bg-background/90 transition-all duration-300 border-2"
+                >
+                  {t("loginToDashboard")}
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      <footer className="bg-card/80 backdrop-blur-md py-12 relative z-10 border-t border-primary/10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <h1 className="text-2xl font-bold">Snapform</h1>
+            <div className="flex items-center gap-4 mb-6 md:mb-0">
+              <Image
+                src="/logo.svg"
+                alt="Snapform Logo"
+                width={40}
+                height={40}
+                className="dark:invert"
+              />
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Snapform
+              </h1>
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">

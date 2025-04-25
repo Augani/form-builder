@@ -36,9 +36,13 @@ export async function POST(
 
     const { fields, ...formDataWithoutFields } = existingForm;
 
+    // Remove id from formDataWithoutFields to avoid unique constraint error
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...formDataWithoutId } = formDataWithoutFields;
+
     const newForm = await prisma.form.create({
       data: {
-        ...formDataWithoutFields,
+        ...formDataWithoutId,
         name: `${formDataWithoutFields.name} (Copy)`,
         status: "DRAFT",
         fields: {

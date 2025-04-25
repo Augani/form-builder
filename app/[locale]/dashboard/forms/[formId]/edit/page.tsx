@@ -604,12 +604,8 @@ export default function EditFormPage() {
   };
 
   const handleRemoveField = (fieldId: string) => {
-    console.log("Attempting to remove field with ID:", fieldId);
-
     if (fields.length > 1) {
       const updatedFields = fields.filter((field) => field.id !== fieldId);
-      console.log("Fields before:", fields.length);
-      console.log("Fields after:", updatedFields.length);
 
       setFields(updatedFields);
 

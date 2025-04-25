@@ -363,7 +363,7 @@ export default function FormPreviewPage() {
             </span>
           </div>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col md:flex-row md:justify-end gap-2">
           {form.status.toLowerCase() === "draft" && (
             <Button
               variant="default"
@@ -402,10 +402,10 @@ export default function FormPreviewPage() {
 
       <Tabs
         defaultValue="preview"
-        className="w-full"
+        className="w-full md:max-w-2xl lg:max-w-5xl mx-auto"
         onValueChange={handleTabChange}
       >
-        <TabsList className="grid w-full grid-cols-2 mb-6">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 max-w-3xl mx-auto mb-6">
           <TabsTrigger value="preview">
             <FileText className="h-4 w-4 mr-2" />
             {t("tabPreview")}

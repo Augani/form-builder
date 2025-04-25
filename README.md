@@ -2,9 +2,11 @@
 
 A modern, feature-rich form builder built with **Next.js App Router**, **Tailwind CSS**, **shadcn/ui**, **PostgreSQL**, **Prisma**, and **Docker**. Create beautiful, interactive forms with advanced customization options and analytics.
 
-> 💡 **Fun Fact**: This entire project was built in just 11 hours! (6 hours on day one, 5 hours on day two) ⚡️
+> 💡 **Fun Fact**: This entire project was built in just 15 hours! (7 hours on day one, 8 hours on day two) ⚡️
 > 
 > Built with ❤️ by [Augustus Otu](https://github.com/augani) who believes in creating powerful tools that are both beautiful and functional.
+
+![SnapForm Screenshot](./screenshot.png)
 
 ---
 
@@ -24,6 +26,8 @@ A modern, feature-rich form builder built with **Next.js App Router**, **Tailwin
 - ✅ Advanced form validation using Zod + React Hook Form
 - 🔄 Field reordering with drag-and-drop functionality
 - 📊 Form analytics and response tracking
+
+![Live Preview](./public/snapform/live-preview.png)
 
 ### Styling & Customization
 - 🎨 Theme customization:
@@ -48,12 +52,16 @@ A modern, feature-rich form builder built with **Next.js App Router**, **Tailwin
   - Rotate
 - ⚡ Animation speed control (Slow, Medium, Fast)
 
+![Customize Your Forms](./public/snapform/customize.png)
+
 ### Data Management
 - 📦 PostgreSQL database with Prisma ORM
 - 🔒 User authentication and authorization
 - 📊 Response collection and management
 - 📈 Form analytics and statistics
 - 🔄 Form status management (Draft, Active, Inactive)
+
+![Secure Data Management](./public/snapform/secure.png)
 
 ### User Experience
 - 🌐 Internationalization support
@@ -63,6 +71,14 @@ A modern, feature-rich form builder built with **Next.js App Router**, **Tailwin
 - 🔀 Question shuffling capability
 - 📧 Email collection option
 - 🔒 One response per user limit
+
+![Responsive Design](./public/snapform/responsive.png)
+
+### Easy To Use
+![Intuitive Interface](./public/snapform/easy-to-use.png)
+
+### Analytics & Insights
+![Form Analytics](./public/snapform/analytics.png)
 
 ---
 
@@ -104,7 +120,7 @@ npm install
 ### 3. Set up environment variables
 Create a `.env` file in the root directory with:
 ```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/form_builder"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/snapform"
 NEXTAUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:3000"
 ```
@@ -114,9 +130,11 @@ NEXTAUTH_URL="http://localhost:3000"
 docker-compose up -d
 ```
 
-### 5. Set up your database
+### 5. Set up your database, generate Prisma client and seed data
 ```bash
 npx prisma migrate dev --name init
+npx prisma generate
+npx prisma db seed
 ```
 
 ### 6. Run the development server

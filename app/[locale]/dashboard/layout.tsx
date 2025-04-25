@@ -8,7 +8,6 @@ import {
   FileText,
   User,
   LogOut,
-  Settings,
   PlusCircle,
 } from "lucide-react";
 import Image from "next/image";
@@ -50,11 +49,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       name: t("profile"),
       href: "/dashboard/profile",
       icon: User,
-    },
-    {
-      name: t("settings"),
-      href: "/dashboard/settings",
-      icon: Settings,
     },
   ];
 

@@ -150,7 +150,7 @@ function SortableField({
             <GripVertical className="h-5 w-5" />
           </div>
           <h3 className="font-medium">
-            {t("field")} {index + 1}
+            {t("field.header", { index: index + 1 })}
           </h3>
         </div>
         <div className="flex items-center space-x-2">
@@ -169,17 +169,17 @@ function SortableField({
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">{t("fieldLabel")}</label>
+            <label className="text-sm font-medium">{t("field.label")}</label>
             <Input
               value={field.label}
               onChange={(e) => updateField(field.id, { label: e.target.value })}
-              placeholder={t("fieldLabelPlaceholder")}
+              placeholder={t("field.labelPlaceholder")}
               className="mt-1"
               disabled={isLoading}
             />
           </div>
           <div>
-            <label className="text-sm font-medium">{t("fieldType")}</label>
+            <label className="text-sm font-medium">{t("field.type")}</label>
             <Select
               value={field.type}
               onValueChange={(value) => {
@@ -199,7 +199,7 @@ function SortableField({
               disabled={isLoading}
             >
               <SelectTrigger className="mt-1">
-                <SelectValue placeholder={t("selectFieldType")} />
+                <SelectValue placeholder={t("field.typePlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="text">{t("fieldTypes.text")}</SelectItem>
@@ -224,7 +224,9 @@ function SortableField({
           field.type === "number" ||
           field.type === "textarea") && (
           <div>
-            <label className="text-sm font-medium">{t("placeholder")}</label>
+            <label className="text-sm font-medium">
+              {t("field.placeholder")}
+            </label>
             <Input
               value={field.placeholder || ""}
               onChange={(e) =>
@@ -232,7 +234,7 @@ function SortableField({
                   placeholder: e.target.value,
                 })
               }
-              placeholder={t("placeholderPlaceholder")}
+              placeholder={t("field.placeholderPlaceholder")}
               className="mt-1"
               disabled={isLoading}
             />
@@ -244,7 +246,9 @@ function SortableField({
           field.type === "checkbox") && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">{t("options")}</label>
+              <label className="text-sm font-medium">
+                {t("field.options")}
+              </label>
               <Button
                 variant="outline"
                 size="sm"
@@ -252,7 +256,7 @@ function SortableField({
                 disabled={isLoading}
               >
                 <Plus className="h-3 w-3 mr-1" />
-                {t("addOption")}
+                {t("field.addOption")}
               </Button>
             </div>
             <div className="space-y-2">
@@ -263,7 +267,9 @@ function SortableField({
                     onChange={(e) =>
                       updateOption(field.id, optionIndex, e.target.value)
                     }
-                    placeholder={`${t("option")} ${optionIndex + 1}`}
+                    placeholder={t("field.optionPlaceholder", {
+                      index: optionIndex + 1,
+                    })}
                     className="flex-1"
                     disabled={isLoading}
                   />
@@ -295,14 +301,13 @@ function SortableField({
             htmlFor={`required-${field.id}`}
             className="text-sm font-medium cursor-pointer"
           >
-            {t("required")}
+            {t("field.required")}
           </label>
         </div>
       </div>
     </div>
   );
 }
-
 
 function ThemeSelector({
   theme,
@@ -312,6 +317,7 @@ function ThemeSelector({
   onSelectTheme: (theme: ThemeType) => void;
 }) {
   const t = useTranslations("dashboard.formBuilder");
+  const formsT = useTranslations("forms");
   const [themes, setThemes] = useState<ThemeType[]>([]);
   const [selectedTheme, setSelectedTheme] = useState<ThemeType | null>(
     theme || null
@@ -363,8 +369,6 @@ function ThemeSelector({
       [property]: value,
     };
 
-    console.log(`Updating ${property} to ${value}`);
-
     setSelectedTheme(updatedTheme);
     onSelectTheme(updatedTheme);
   };
@@ -375,7 +379,7 @@ function ThemeSelector({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">{t("selectTheme")}</h3>
+      <h3 className="text-lg font-medium">{formsT("selectTheme")}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {themes.map((theme) => (
           <div
@@ -422,7 +426,7 @@ function ThemeSelector({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium block mb-1">
-            {t("primaryColor")}
+            {formsT("primaryColor")}
           </label>
           <div className="flex">
             <Input
@@ -446,7 +450,7 @@ function ThemeSelector({
 
         <div>
           <label className="text-sm font-medium block mb-1">
-            {t("backgroundColor")}
+            {formsT("backgroundColor")}
           </label>
           <div className="flex">
             <Input
@@ -470,7 +474,7 @@ function ThemeSelector({
 
         <div>
           <label className="text-sm font-medium block mb-1">
-            {t("textColor")}
+            {formsT("textColor")}
           </label>
           <div className="flex">
             <Input
@@ -494,7 +498,7 @@ function ThemeSelector({
 
         <div>
           <label className="text-sm font-medium block mb-1">
-            {t("borderRadius")}
+            {formsT("borderRadius")}
           </label>
           <Input
             type="range"
@@ -530,13 +534,13 @@ function AnimationSelector({
   onSpeedChange: (value: AnimationSpeed) => void;
   onPreview: () => void;
 }) {
-  const t = useTranslations("dashboard.formBuilder");
+  const formsT = useTranslations("forms");
 
   return (
     <div className="space-y-4">
       <div>
         <label className="text-sm font-medium block mb-1">
-          {t("animation")}
+          {formsT("animation")}
         </label>
         <div className="flex space-x-2">
           <Select
@@ -544,15 +548,21 @@ function AnimationSelector({
             onValueChange={(val) => onChange(val as Animation)}
           >
             <SelectTrigger className="flex-1">
-              <SelectValue placeholder={t("selectAnimation")} />
+              <SelectValue placeholder={formsT("selectAnimation")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="NONE">{t("animations.none")}</SelectItem>
-              <SelectItem value="FADE">{t("animations.fade")}</SelectItem>
-              <SelectItem value="SLIDE">{t("animations.slide")}</SelectItem>
-              <SelectItem value="ZOOM">{t("animations.zoom")}</SelectItem>
-              <SelectItem value="BOUNCE">{t("animations.bounce")}</SelectItem>
-              <SelectItem value="SCALE">{t("animations.scale")}</SelectItem>
+              <SelectItem value="NONE">{formsT("animations.none")}</SelectItem>
+              <SelectItem value="FADE">{formsT("animations.fade")}</SelectItem>
+              <SelectItem value="SLIDE">
+                {formsT("animations.slide")}
+              </SelectItem>
+              <SelectItem value="ZOOM">{formsT("animations.zoom")}</SelectItem>
+              <SelectItem value="BOUNCE">
+                {formsT("animations.bounce")}
+              </SelectItem>
+              <SelectItem value="SCALE">
+                {formsT("animations.scale")}
+              </SelectItem>
             </SelectContent>
           </Select>
 
@@ -570,19 +580,19 @@ function AnimationSelector({
       {value !== "NONE" && (
         <div>
           <label className="text-sm font-medium block mb-1">
-            {t("animationSpeed")}
+            {formsT("animationSpeed")}
           </label>
           <Select
             value={speed}
             onValueChange={(val) => onSpeedChange(val as AnimationSpeed)}
           >
             <SelectTrigger>
-              <SelectValue placeholder={t("selectSpeed")} />
+              <SelectValue placeholder={formsT("selectSpeed")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SLOW">{t("speeds.slow")}</SelectItem>
-              <SelectItem value="MEDIUM">{t("speeds.medium")}</SelectItem>
-              <SelectItem value="FAST">{t("speeds.fast")}</SelectItem>
+              <SelectItem value="SLOW">{formsT("speeds.slow")}</SelectItem>
+              <SelectItem value="MEDIUM">{formsT("speeds.medium")}</SelectItem>
+              <SelectItem value="FAST">{formsT("speeds.fast")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -593,6 +603,7 @@ function AnimationSelector({
 
 export default function NewFormPage() {
   const t = useTranslations("dashboard.formBuilder");
+  const formsT = useTranslations("forms");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formFields, setFormFields] = useState<FieldType[]>([
@@ -614,6 +625,13 @@ export default function NewFormPage() {
     useState<AnimationSpeed>("MEDIUM");
   const [showAnimationPreview, setShowAnimationPreview] = useState(false);
   const [activeTab, setActiveTab] = useState("settings");
+
+  // Form settings state
+  const [collectEmails, setCollectEmails] = useState(false);
+  const [limitOneResponse, setLimitOneResponse] = useState(false);
+  const [showProgressBar, setShowProgressBar] = useState(false);
+  const [shuffleQuestions, setShuffleQuestions] = useState(false);
+  const [formStatus, setFormStatus] = useState("draft");
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -765,7 +783,11 @@ export default function NewFormPage() {
         theme: selectedTheme?.id || "default-light",
         animation: selectedAnimation,
         animationSpeed: animationSpeed,
-        status: "draft",
+        status: formStatus,
+        collectEmails,
+        limitOneResponse,
+        showProgressBar,
+        shuffleQuestions,
       };
 
       const { data: result } = await apiClient.post(
@@ -955,82 +977,116 @@ export default function NewFormPage() {
         <div className="space-y-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="settings">{t("formSettings")}</TabsTrigger>
+              <TabsTrigger value="settings">
+                {formsT("formSettings")}
+              </TabsTrigger>
               <TabsTrigger value="theme" className="flex items-center">
                 <Palette className="mr-2 h-4 w-4" />
-                {t("theme")}
+                {formsT("theme")}
               </TabsTrigger>
               <TabsTrigger value="preview" className="flex items-center">
                 <Eye className="mr-2 h-4 w-4" />
-                {t("preview")}
+                {formsT("preview")}
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="settings">
               <Card>
                 <CardHeader>
-                  <CardTitle>{t("formSettings")}</CardTitle>
+                  <CardTitle>{formsT("formSettings")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <h3 className="text-sm font-medium mb-2">
-                      {t("formStatus")}
+                      {formsT("formStatus")}
                     </h3>
-                    <Select defaultValue="draft" disabled={isLoading}>
+                    <Select
+                      value={formStatus}
+                      onValueChange={setFormStatus}
+                      disabled={isLoading}
+                    >
                       <SelectTrigger>
-                        <SelectValue placeholder={t("selectStatus")} />
+                        <SelectValue placeholder={formsT("selectStatus")} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="draft">
-                          {t("status.draft")}
+                          {formsT("status.draft")}
                         </SelectItem>
                         <SelectItem value="active">
-                          {t("status.active")}
+                          {formsT("status.active")}
                         </SelectItem>
                         <SelectItem value="inactive">
-                          {t("status.inactive")}
+                          {formsT("status.inactive")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="collect-email" disabled={isLoading} />
+                    <Checkbox
+                      id="collect-email"
+                      disabled={isLoading}
+                      checked={collectEmails}
+                      onCheckedChange={(checked) =>
+                        setCollectEmails(checked === true)
+                      }
+                    />
                     <label
                       htmlFor="collect-email"
                       className="text-sm font-medium cursor-pointer"
                     >
-                      {t("collectEmailAddresses")}
+                      {formsT("collectEmailAddresses")}
                     </label>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="one-response" disabled={isLoading} />
+                    <Checkbox
+                      id="one-response"
+                      disabled={isLoading}
+                      checked={limitOneResponse}
+                      onCheckedChange={(checked) =>
+                        setLimitOneResponse(checked === true)
+                      }
+                    />
                     <label
                       htmlFor="one-response"
                       className="text-sm font-medium cursor-pointer"
                     >
-                      {t("limitOneResponsePerPerson")}
+                      {formsT("limitOneResponsePerPerson")}
                     </label>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="show-progress" disabled={isLoading} />
+                    <Checkbox
+                      id="show-progress"
+                      disabled={isLoading}
+                      checked={showProgressBar}
+                      onCheckedChange={(checked) =>
+                        setShowProgressBar(checked === true)
+                      }
+                    />
                     <label
                       htmlFor="show-progress"
                       className="text-sm font-medium cursor-pointer"
                     >
-                      {t("showProgressBar")}
+                      {formsT("showProgressBar")}
                     </label>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="shuffle-questions" disabled={isLoading} />
+                    <Checkbox
+                      id="shuffle-questions"
+                      disabled={isLoading}
+                      checked={shuffleQuestions}
+                      onCheckedChange={(checked) =>
+                        setShuffleQuestions(checked === true)
+                      }
+                    />
                     <label
                       htmlFor="shuffle-questions"
                       className="text-sm font-medium cursor-pointer"
                     >
-                      {t("shuffleQuestions")}
+                      {formsT("shuffleQuestions")}
                     </label>
                   </div>
                 </CardContent>
@@ -1040,7 +1096,7 @@ export default function NewFormPage() {
             <TabsContent value="theme">
               <Card>
                 <CardHeader>
-                  <CardTitle>{t("formTheme")}</CardTitle>
+                  <CardTitle>{formsT("formTheme")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-8">
@@ -1051,7 +1107,7 @@ export default function NewFormPage() {
 
                     <div className="border-t pt-6">
                       <h3 className="text-lg font-medium mb-4">
-                        {t("formAnimation")}
+                        {formsT("formAnimation")}
                       </h3>
                       <AnimationSelector
                         value={selectedAnimation}
@@ -1069,7 +1125,7 @@ export default function NewFormPage() {
             <TabsContent value="preview">
               <Card>
                 <CardHeader>
-                  <CardTitle>{t("livePreview")}</CardTitle>
+                  <CardTitle>{formsT("livePreview")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <FormPreview
@@ -1080,6 +1136,8 @@ export default function NewFormPage() {
                     animation={selectedAnimation}
                     animationSpeed={animationSpeed}
                     showAnimationPreview={showAnimationPreview}
+                    showProgressBar={showProgressBar}
+                    collectEmails={collectEmails}
                   />
                 </CardContent>
               </Card>

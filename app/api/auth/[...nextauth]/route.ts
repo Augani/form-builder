@@ -56,14 +56,12 @@ export const authConfig: NextAuthConfig = {
     session: ({ session, token }) => {
       if (token && session.user) {
         session.user.id = token.sub as string;
-        console.log("Session callback - adding user ID:", token.sub);
       }
       return session;
     },
     jwt: ({ token, user }) => {
       if (user) {
         token.sub = user.id;
-        console.log("JWT callback - setting token sub:", user.id);
       }
       return token;
     },

@@ -160,6 +160,13 @@
     "selectAnOption": "Select an option",
     "submit": "Submit",
     "previewAnimation": "Preview Animation",
+    "primaryColor": "Primary Color",
+    "secondaryColor": "Secondary Color",
+    "backgroundColor": "Background Color",
+    "accentColor": "Accent Color",
+    "textColor": "Text Color",
+    "borderRadius": "Border Radius",
+    "customizeTheme": "Customize Theme",
     "formBuilder": {
       "backToForms": "Forms",
       "createNewForm": "Create New Form",
@@ -376,9 +383,7 @@
       "saveForm": "Save Form",
       "formDetails": "Form Details",
       "formName": "Form Name",
-      "formNamePlaceholder": "Enter form name",
       "formDescription": "Form Description",
-      "formDescriptionPlaceholder": "Enter a description for your form",
       "formFields": "Form Fields",
       "addField": "Add Field",
       "field": {

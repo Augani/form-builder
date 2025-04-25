@@ -160,6 +160,13 @@
     "selectAnOption": "Option auswählen",
     "submit": "Absenden",
     "previewAnimation": "Animation Vorschau",
+    "primaryColor": "Primärfarbe",
+    "secondaryColor": "Sekundärfarbe",
+    "backgroundColor": "Hintergrundfarbe",
+    "accentColor": "Akzentfarbe",
+    "textColor": "Textfarbe",
+    "borderRadius": "Rahmenradius",
+    "customizeTheme": "Design anpassen",
     "formBuilder": {
       "backToForms": "Formulare",
       "createNewForm": "Neues Formular erstellen",

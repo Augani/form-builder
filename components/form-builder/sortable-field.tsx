@@ -126,7 +126,6 @@ export function SortableField({
           variant="ghost"
           size="sm"
           onClick={() => {
-            console.log("Delete button clicked for field ID:", field.id);
             if (onDelete) {
               onDelete(field.id);
             }
