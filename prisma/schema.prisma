@@ -10,62 +10,208 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  email         String   @unique
-  password  String
+  id            String    @id @default(cuid())
   name          String?
-  forms         Form[]   // one-to-many relationship
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  forms         Form[]    // one-to-many relationship
+  themes        Theme[]   // user can create custom themes
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Form {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  fields      Field[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                      String       @id @default(cuid())
+  name                    String
+  description             String?      @db.Text
+  status                  FormStatus   @default(DRAFT)
+  collectEmails           Boolean      @default(false)
+  limitOneResponsePerUser Boolean      @default(false)
+  showProgressBar         Boolean      @default(false)
+  shuffleQuestions        Boolean      @default(false)
+  
+  // Theme and styling
+  theme                   Theme?       @relation(fields: [themeId], references: [id])
+  themeId                 String?
+  primaryColor            String?      // HEX or RGB color code
+  secondaryColor          String?      // HEX or RGB color code
+  backgroundColor         String?      // HEX or RGB color code
+  fontFamily              String?      // Font family name
+  
+  // Animation
+  animation               Animation    @default(NONE)
+  animationSpeed          AnimationSpeed @default(MEDIUM)
+  
+  // Layout
+  layout                  FormLayout   @default(STANDARD)
+  spacing                 FormSpacing  @default(MEDIUM)
+  borderRadius            Int          @default(8) // Border radius in pixels
+  
+  user                    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                  String
+  fields                  Field[]      // one-to-many relationship
+  responses               Response[]   // one-to-many relationship
+  responseCount           Int          @default(0)
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+}
+
+model Theme {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  primaryColor    String    // HEX or RGB color code
+  secondaryColor  String    // HEX or RGB color code
+  backgroundColor String    // HEX or RGB color code
+  accentColor     String?   // HEX or RGB color code
+  textColor       String    // HEX or RGB color code
+  fontFamily      String    // Font family name
+  isPublic        Boolean   @default(false) // If true, available to all users
+  
+  // Animation defaults
+  defaultAnimation Animation @default(FADE)
+  
+  // Layout defaults
+  defaultLayout   FormLayout @default(STANDARD)
+  defaultSpacing  FormSpacing @default(MEDIUM)
+  borderRadius    Int       @default(8)
+
+  // Relationships
+  createdBy       User      @relation(fields: [userId], references: [id])
+  userId          String
+  forms           Form[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model Field {
-  id        String     @id @default(cuid())
-  form      Form       @relation(fields: [formId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  form         Form       @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId       String
+  type         FieldType
+  label        String
+  placeholder  String?
+  required     Boolean    @default(false)
+  options      String[]   @default([])
+  order        Int
+  
+  // Field styling (overrides form settings)
+  customStyle  Boolean    @default(false)
+  backgroundColor String?
+  textColor    String?
+  borderColor  String?
+  animation    Animation? // Specific animation for this field
+  
+  responses    FieldResponse[]
+}
+
+model Response {
+  id        String          @id @default(cuid())
+  form      Form            @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId    String
-  label     String
-  type      FieldType
-  required  Boolean    @default(false)
-  options   String[]   @default([])
-  order     Int
-  validation String?
-  minLength Int?
-  maxLength Int?
-  minValue  Int?
-  maxValue  Int?
-  pattern   String?
-  placeholder String?
-  defaultValue String?
+  email     String?
+  fields    FieldResponse[]
+  createdAt DateTime        @default(now())
+  completed Boolean         @default(true)
+}
+
+model FieldResponse {
+  id         String   @id @default(cuid())
+  field      Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId    String
+  response   Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  responseId String
+  value      String   @db.Text
+  values     String[] @default([]) // For fields that can have multiple values like checkboxes
+
+  @@unique([fieldId, responseId])
+}
+
+enum FormStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
 }
 
 enum FieldType {
   TEXT
+  EMAIL
+  NUMBER
   TEXTAREA
   SELECT
-  CHECKBOX
   RADIO
+  CHECKBOX
   DATE
-  TIME
-  NUMBER
-  EMAIL
-  URL
-  PHONE
-  FILE
-  IMAGE
-  VIDEO
-  AUDIO
-  LINK
-  COLOR
-  RATING
+}
+
+enum Animation {
+  NONE
+  FADE
+  SLIDE
+  ZOOM
+  BOUNCE
+  FLIP
+  SCALE
+  ROTATE
+}
+
+enum AnimationSpeed {
+  SLOW
+  MEDIUM
+  FAST
+}
+
+enum FormLayout {
+  STANDARD
+  CARD
+  STEPPER
+  CONVERSATIONAL
+  COMPACT
+  GRID
+}
+
+enum FormSpacing {
+  TIGHT
+  MEDIUM
+  WIDE
 }

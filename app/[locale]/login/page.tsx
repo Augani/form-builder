@@ -11,28 +11,40 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
 
 const LoginPage = (): React.ReactNode => {
   const t = useTranslations("login");
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [alert, setAlert] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
 
+  // Create validation schema with translated messages
   const loginSchema = z.object({
     email: z.string().email(t("invalidEmail")),
     password: z.string().min(6, t("passwordTooShort")),
   });
-
-  type LoginFormValues = z.infer<typeof loginSchema>;
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -40,26 +52,27 @@ const LoginPage = (): React.ReactNode => {
       email: "",
       password: "",
     },
+    mode: "onChange",
   });
 
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
-    setAlert(null);
     try {
-      // This would be replaced with actual authentication logic
-      console.log("Login data:", data);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setAlert({
-        type: "success",
-        message: t("loginSuccess"),
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
       });
+      debugger;
+      if (result?.error) {
+        toast.error(t("loginError"));
+      } else {
+        toast.success(t("loginSuccess"));
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.error("Login error:", error);
-      setAlert({
-        type: "error",
-        message: t("loginError"),
-      });
+      toast.error(t("loginError"));
     } finally {
       setIsLoading(false);
     }
@@ -76,20 +89,12 @@ const LoginPage = (): React.ReactNode => {
               width={60}
               height={20}
               className="dark:invert"
+              priority
             />
           </Link>
           <h1 className="text-3xl font-bold">{t("welcome")}</h1>
           <p className="text-muted-foreground mt-2">{t("enterCredentials")}</p>
         </div>
-
-        {alert && (
-          <Alert
-            variant={alert.type === "error" ? "destructive" : "default"}
-            className="mb-4"
-          >
-            <AlertDescription>{alert.message}</AlertDescription>
-          </Alert>
-        )}
 
         <Card>
           <CardHeader>
@@ -97,68 +102,77 @@ const LoginPage = (): React.ReactNode => {
             <CardDescription>{t("loginDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <form
-              noValidate
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4"
-            >
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
-                  {t("email")}
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder={t("emailPlaceholder")}
-                  {...form.register("email")}
-                  disabled={isLoading}
-                  aria-invalid={!!form.formState.errors.email}
-                />
-                {form.formState.errors.email && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {form.formState.errors.email.message}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="text-sm font-medium">
-                    {t("password")}
-                  </label>
-                  <Link
-                    href="#"
-                    className="text-sm text-primary hover:underline"
-                  >
-                    {t("forgotPassword")}
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  {...form.register("password")}
-                  disabled={isLoading}
-                  aria-invalid={!!form.formState.errors.password}
-                />
-                {form.formState.errors.password && (
-                  <p className="text-sm text-destructive" role="alert">
-                    {form.formState.errors.password.message}
-                  </p>
-                )}
-              </div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
-                data-testid="login-button"
+            <Form {...form}>
+              <form
+                noValidate
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
               >
-                {isLoading ? t("signingIn") : t("signIn")}
-              </Button>
-            </form>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("email")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t("emailPlaceholder")}
+                          type="email"
+                          disabled={isLoading}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center justify-between">
+                        <FormLabel>{t("password")}</FormLabel>
+                        <Link
+                          href="#"
+                          className="text-sm text-primary hover:underline"
+                        >
+                          {t("forgotPassword")}
+                        </Link>
+                      </div>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          disabled={isLoading}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoading || !form.formState.isValid}
+                  data-testid="login-button"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t("signingIn")}
+                    </>
+                  ) : (
+                    t("signIn")
+                  )}
+                </Button>
+              </form>
+            </Form>
           </CardContent>
           <CardFooter className="flex flex-col items-center justify-center space-y-2 border-t p-6">
             <div className="text-sm text-muted-foreground">
               {t("noAccount")}{" "}
-              <Link href="#" className="text-primary hover:underline">
+              <Link href="/signup" className="text-primary hover:underline">
                 {t("signUp")}
               </Link>
             </div>

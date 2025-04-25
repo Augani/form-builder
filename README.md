@@ -1,18 +1,68 @@
-# 🛠️ Mini Form Builder
+# 🛠️ SnapForm
 
-A mini form builder built with **Next.js App Router**, **Tailwind CSS**, **shadcn/ui**, **PostgreSQL**, **Prisma**, and **Docker**. Users can dynamically create, preview, and save forms with custom fields.
+A modern, feature-rich form builder built with **Next.js App Router**, **Tailwind CSS**, **shadcn/ui**, **PostgreSQL**, **Prisma**, and **Docker**. Create beautiful, interactive forms with advanced customization options and analytics.
+
+> 💡 **Fun Fact**: This entire project was built in just 11 hours! (6 hours on day one, 5 hours on day two) ⚡️
+> 
+> Built with ❤️ by [Augustus Otu](https://github.com/augani) who believes in creating powerful tools that are both beautiful and functional.
 
 ---
 
 ## 🚀 Features
 
-- ✨ Create forms with title and description
-- 🔧 Add dynamic fields (Text, Textarea, Select, Checkbox, Radio)
-- ✅ Form field validation using Zod + React Hook Form
-- 📦 Persist forms and fields in PostgreSQL with Prisma
-- 🎨 Responsive and accessible UI using Tailwind + shadcn/ui
-- 🧪 Unit tested with Jest + Testing Library
-- 🐳 Dockerized for easy local development
+### Core Form Building
+- ✨ Create forms with customizable titles and descriptions
+- 🔧 Support for multiple field types:
+  - Text (Single line)
+  - Email
+  - Number
+  - Textarea (Multi-line)
+  - Select (Dropdown)
+  - Radio buttons
+  - Checkboxes
+  - Date picker
+- ✅ Advanced form validation using Zod + React Hook Form
+- 🔄 Field reordering with drag-and-drop functionality
+- 📊 Form analytics and response tracking
+
+### Styling & Customization
+- 🎨 Theme customization:
+  - Custom color schemes
+  - Font family selection
+  - Border radius control
+  - Spacing options
+- 🎭 Multiple form layouts:
+  - Standard
+  - Card
+  - Stepper
+  - Conversational
+  - Compact
+  - Grid
+- ✨ Animation effects:
+  - Fade
+  - Slide
+  - Zoom
+  - Bounce
+  - Flip
+  - Scale
+  - Rotate
+- ⚡ Animation speed control (Slow, Medium, Fast)
+
+### Data Management
+- 📦 PostgreSQL database with Prisma ORM
+- 🔒 User authentication and authorization
+- 📊 Response collection and management
+- 📈 Form analytics and statistics
+- 🔄 Form status management (Draft, Active, Inactive)
+
+### User Experience
+- 🌐 Internationalization support
+- 📱 Fully responsive design
+- ♿ Accessibility compliant
+- 🎯 Progress bar option
+- 🔀 Question shuffling capability
+- 📧 Email collection option
+- 🔒 One response per user limit
 
 ---
 
@@ -20,18 +70,25 @@ A mini form builder built with **Next.js App Router**, **Tailwind CSS**, **shadc
 
 | Tech         | Purpose                              |
 |--------------|--------------------------------------|
-| Next.js      | Framework (App Router + TypeScript)  |
-| Tailwind CSS | Styling                              |
-| shadcn/ui    | UI components                        |
-| Prisma       | ORM for PostgreSQL                   |
-| PostgreSQL   | Database                             |
-| Docker       | Containerized DB setup               |
-| React Hook Form + Zod | Form management + validation |
-| Jest         | Testing                              |
+| Next.js 14   | Framework (App Router + TypeScript)  |
+| Tailwind CSS | Utility-first CSS framework          |
+| shadcn/ui    | Accessible UI components             |
+| Prisma       | Type-safe ORM for PostgreSQL         |
+| PostgreSQL   | Robust relational database           |
+| Docker       | Containerized development            |
+| React Hook Form + Zod | Form state management & validation |
+| Jest         | Unit testing framework               |
+| i18next      | Internationalization                |
+| Husky        | Git hooks                            |
 
 ---
 
 ## 📦 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- Docker and Docker Compose
+- PostgreSQL (handled by Docker)
 
 ### 1. Clone the repo
 ```bash
@@ -44,76 +101,124 @@ cd form-builder
 npm install
 ```
 
-### 3. Start PostgreSQL with Docker
+### 3. Set up environment variables
+Create a `.env` file in the root directory with:
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/form_builder"
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+### 4. Start PostgreSQL with Docker
 ```bash
 docker-compose up -d
 ```
 
-### 4. Set up your database
+### 5. Set up your database
 ```bash
 npx prisma migrate dev --name init
 ```
 
-### 5. Run the development server
+### 6. Run the development server
 ```bash
 npm run dev
 ```
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Testing
 
 ```bash
+# Run all tests
 npm test
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Run tests with coverage
+npm test -- --coverage
 ```
 
-Tests are written using **Jest** and **@testing-library/react**.
+Tests are written using **Jest** and **@testing-library/react**, focusing on:
+- Component rendering
+- Form validation
+- User interactions
+- API endpoints
+- Database operations
 
 ---
 
-## 🗂️ Folder Structure (Simplified)
+## 🗂️ Project Structure
 
 ```
 .
-├── app/                 # Next.js App Router
-│   └── builder/         # Form builder page
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   │   ├── auth/         # Authentication endpoints
+│   │   ├── forms/        # Form management
+│   │   ├── themes/       # Theme customization
+│   │   └── public-forms/ # Public form endpoints
+│   └── [locale]/         # Internationalized routes
 ├── components/
-│   ├── form-builder/    # Custom builder components
-│   └── ui/              # shadcn/ui components
-├── lib/                 # Prisma client, schemas, utils
-├── prisma/              # Prisma schema + migrations
-├── __tests__/           # Unit tests
-├── docker-compose.yml
-└── README.md
+│   ├── form-builder/     # Form building components
+│   └── ui/               # Reusable UI components
+├── lib/                  # Utilities and configurations
+├── prisma/              # Database schema and migrations
+├── types/               # TypeScript type definitions
+├── __tests__/           # Test files
+├── i18n/                # Internationalization files
+└── messages/            # Translation files
 ```
 
 ---
 
-## 📥 API & Persistence
+## 📈 Future Enhancements
 
-All forms and fields are persisted in a PostgreSQL database using Prisma. You can extend this to support:
-- Form submissions
-- Role-based access
-- Public vs private forms
+### High Priority
+- [ ] Form template system
+- [ ] Advanced form logic (conditional questions)
+- [ ] File upload support
+- [ ] Rich text editor for descriptions
+- [ ] Form sharing and collaboration
+
+### Medium Priority
+- [ ] Form versioning
+- [ ] Response export (CSV, Excel)
+- [ ] Custom validation rules
+- [ ] Form embedding options
+- [ ] Webhook integrations
+
+### Low Priority
+- [ ] Form analytics dashboard
+- [ ] A/B testing for forms
+- [ ] Form scheduling
+- [ ] Payment integration
+- [ ] Custom field types
 
 ---
 
-## 📌 TODO (Optional Enhancements)
+## 🤝 Contributing
 
-- [ ] Field reordering (drag & drop)
-- [ ] Export/import form JSON
-- [ ] Live preview while building
-- [ ] Deploy on Vercel
-- [ ] Add i18n support
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+> 💭 **Developer's Note**: I'm always excited to see what amazing features the community can add to this project! Let's make form building even more delightful together! 🚀
 
 ---
 
 ## 📧 Contact
 
-For questions, feel free to reach out at [augustusniiotu@icloud.com](mailto:augustusniiotu@icloud.com) or connect via [GitHub](https://github.com/augani).
+For questions, suggestions, or just to chat about form builders (or anything tech-related!), feel free to reach out at [augustusniiotu@icloud.com](mailto:augustusniiotu@icloud.com) or connect via [GitHub](https://github.com/augani).
+
+> 💌 **P.S.**: I love hearing from fellow developers and form enthusiasts! Don't hesitate to drop a message - I promise to respond! 😊
 
 ---
 
 ## 📝 License
 
-MIT — do whatever you want with it.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+> 🎉 **Thanks for checking out SnapForm!** I hope it helps you create amazing forms that your users will love! If you use it in your projects, I'd love to hear about it! 🚀

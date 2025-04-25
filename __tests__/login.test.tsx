@@ -2,6 +2,8 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "@/app/[locale]/login/page";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Mock the next-intl translations
 jest.mock("next-intl", () => ({
@@ -58,10 +60,25 @@ jest.mock("next/link", () => ({
 // Mock setTimeout for async operations
 jest.useFakeTimers();
 
+// Mock next-auth
+jest.mock("next-auth/react", () => ({
+  signIn: jest.fn(),
+}));
+
+// Mock next/navigation
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
+
 describe("LoginPage", () => {
+  const mockRouter = {
+    push: jest.fn(),
+  };
+
   beforeEach(() => {
     // Clear all mocks between tests
     jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue(mockRouter);
   });
 
   it("renders the login form", () => {
@@ -148,9 +165,9 @@ describe("LoginPage", () => {
     });
   });
 
-  it("submits the form with valid data", async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation();
+  it("submits the form with valid data and successful login", async () => {
+    const user = userEvent.setup();
+    (signIn as jest.Mock).mockResolvedValueOnce({ ok: true });
 
     render(<LoginPage />);
 
@@ -162,34 +179,30 @@ describe("LoginPage", () => {
     await user.type(passwordInput, "password123");
 
     await user.click(submitButton);
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Login data:",
-        expect.objectContaining({
-          email: "test@example.com",
-          password: "password123",
-        })
-      );
-    });
 
     // Button should show loading state
     expect(submitButton).toBeDisabled();
+    expect(screen.getByText("Signing in...")).toBeInTheDocument();
 
-    // Fast-forward timer to complete the simulated API call
-    jest.advanceTimersByTime(1000);
-
-    // After API call, button should no longer be disabled
     await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
+      expect(signIn).toHaveBeenCalledWith("credentials", {
+        email: "test@example.com",
+        password: "password123",
+        redirect: false,
+      });
     });
 
-    consoleSpy.mockRestore();
+    // After successful login, should redirect to dashboard
+    await waitFor(() => {
+      expect(mockRouter.push).toHaveBeenCalledWith("/dashboard");
+    });
   });
 
-  it("handles form submission errors", async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+  it("handles login failure", async () => {
+    const user = userEvent.setup();
+    (signIn as jest.Mock).mockResolvedValueOnce({
+      error: "Invalid credentials",
+    });
 
     render(<LoginPage />);
 
@@ -198,19 +211,25 @@ describe("LoginPage", () => {
     const submitButton = screen.getByTestId("login-button");
 
     await user.type(emailInput, "test@example.com");
-    await user.type(passwordInput, "password123");
+    await user.type(passwordInput, "wrongpassword");
 
     await user.click(submitButton);
 
-    // Fast-forward timer to complete the simulated API call
-    jest.advanceTimersByTime(1000);
-
-    // After API call, button should no longer be disabled
     await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
+      expect(signIn).toHaveBeenCalledWith("credentials", {
+        email: "test@example.com",
+        password: "wrongpassword",
+        redirect: false,
+      });
     });
 
-    consoleErrorSpy.mockRestore();
+    // Should show error message
+    await waitFor(() => {
+      expect(screen.getByText("Invalid credentials")).toBeInTheDocument();
+    });
+
+    // Should not redirect
+    expect(mockRouter.push).not.toHaveBeenCalled();
   });
 
   afterAll(() => {
