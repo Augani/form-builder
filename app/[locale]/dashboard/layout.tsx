@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -101,7 +102,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             ))}
           </TooltipProvider>
         </div>
-        <div className="border-t p-4">
+        <div className="border-t p-4 flex flex-col items-center gap-4">
+          <LanguageSwitcher />
           <TooltipProvider>
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>

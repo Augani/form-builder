@@ -5,6 +5,7 @@ import { locales } from "@/i18n";
 import { setRequestLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "@/components/ui/sonner";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -54,6 +55,9 @@ export default async function LocaleLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <div className="fixed top-4 right-4 z-50">
+            <LanguageSwitcher />
+          </div>
           {children}
           <Toaster />
         </NextIntlClientProvider>
