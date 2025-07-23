@@ -55,7 +55,7 @@ WORKDIR /app
 
 # Install only production dependencies
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+RUN npm install
 
 # Copy built assets and configs
 COPY --from=builder /app/.next ./.next
