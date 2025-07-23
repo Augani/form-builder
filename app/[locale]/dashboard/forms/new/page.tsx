@@ -927,7 +927,7 @@ export default function NewFormPage() {
               <div className="flex items-center space-x-2">
                 <span className="text-xs text-muted-foreground hidden sm:inline-flex items-center">
                   <Keyboard className="h-3 w-3 mr-1" />
-                  {window !== undefined &&
+                  {typeof window !== "undefined" &&
                     (/Mac/i.test(navigator.userAgent) ? "⌘M" : "Alt+M")}
                 </span>
                 <Button
@@ -1171,7 +1171,7 @@ export default function NewFormPage() {
                   {t("clickToAddField")}
                   <div className="mt-1 text-xs opacity-80 flex items-center justify-center">
                     <Keyboard className="h-3 w-3 mr-1" />
-                    {window !== undefined && (
+                    {typeof window !== "undefined" && (
                       <span>
                         Or press{" "}
                         {/Mac/i.test(navigator.userAgent) ? "⌘M" : "Alt+M"}
