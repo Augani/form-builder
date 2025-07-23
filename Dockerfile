@@ -1,59 +1,72 @@
-# Build stage
-FROM node:18-alpine AS builder
+# ---- Build stage ----
+FROM node:20-slim AS builder
 
-# Set working directory
+# Install dependencies for canvas & Prisma generation
+RUN apt-get update && apt-get install -y \
+  python3 \
+  make \
+  g++ \
+  libcairo2-dev \
+  libpango1.0-dev \
+  libjpeg-dev \
+  libgif-dev \
+  librsvg2-dev \
+  && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Optional: install Prisma globally if CLI use needed
+RUN npm install -g prisma
 
-# Install dependencies
+# Install app dependencies
+COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Copy all files
+# Copy app files
 COPY . .
+
+# Copy env
+COPY .env .env
 
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build the application
+# Build Next.js app
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine AS runner
+
+# ---- Production stage ----
+FROM node:20-slim AS runner
+
+# Install minimal deps for PostgreSQL and canvas runtime
+RUN apt-get update && apt-get install -y \
+  postgresql-client \
+  libcairo2 \
+  libpango-1.0-0 \
+  libjpeg62-turbo \
+  libgif7 \
+  librsvg2-2 \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+# Install only production dependencies
+COPY package.json package-lock.json* ./
+RUN npm ci --omit=dev
 
-# Create a non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
-# Copy necessary files from builder
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/next.config.ts ./
-COPY --from=builder /app/public ./public
+# Copy built assets and configs
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/next.config.ts ./next.config.ts
+COPY --from=builder /app/package.json ./package.json
 
-# Set ownership
-RUN chown -R nextjs:nodejs /app
+# Copy and make entrypoint script executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Switch to non-root user
-USER nextjs
+EXPOSE 3000
 
-# Expose port
-EXPOSE 3001
-
-# Set environment to production
-ENV NODE_ENV=production
-ENV PORT=3001
-
-# Use dumb-init to handle signals properly
-ENTRYPOINT ["dumb-init", "--"]
-
-# Start the application
-CMD ["npm", "start"] 
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["npm", "start"]
