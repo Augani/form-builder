@@ -40,11 +40,11 @@ const themeUpdateSchema = z.object({
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
-    const themeId = params.id;
+    const { id: themeId } = await params;
 
     const theme = await prisma.theme.findUnique({
       where: { id: themeId },
@@ -76,7 +76,7 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -85,7 +85,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const themeId = params.id;
+    const { id: themeId } = await params;
     const body = await req.json();
 
     const validationResult = themeUpdateSchema.safeParse(body);
@@ -128,7 +128,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -137,7 +137,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const themeId = params.id;
+    const { id: themeId } = await params;
 
     const existingTheme = await prisma.theme.findUnique({
       where: { id: themeId },

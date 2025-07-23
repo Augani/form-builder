@@ -45,7 +45,7 @@ type FormUpdateInput = z.infer<typeof updateFormSchema>;
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -54,7 +54,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const formId = params.id;
+    const { id: formId } = await params;
 
     const form = await prisma.form.findUnique({
       where: {
@@ -87,7 +87,7 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -96,7 +96,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const formId = params.id;
+    const { id: formId } = await params;
 
     const existingForm = await prisma.form.findUnique({
       where: {
@@ -179,7 +179,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -188,7 +188,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const formId = params.id;
+    const { id: formId } = await params;
 
     const existingForm = await prisma.form.findUnique({
       where: {
