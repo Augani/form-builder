@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/snapform
-      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_URL=https://snapform.live
       - NEXTAUTH_SECRET=LKSMdf943nnfii43nfd3ef0ewnfnd2we9
     networks:
       - toki_toki

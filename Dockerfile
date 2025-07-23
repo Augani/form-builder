@@ -28,7 +28,7 @@ COPY . .
 # Copy env
 # COPY .env .env
 ENV DATABASE_URL=postgresql://postgres:postgres@postgres:5432/snapform
-ENV NEXTAUTH_URL=http://localhost:3000
+ENV NEXTAUTH_URL=https://snapform.live
 ENV NEXTAUTH_SECRET=LKSMdf943nnfii43nfd3ef0ewnfnd2we9
 
 # Generate Prisma client
