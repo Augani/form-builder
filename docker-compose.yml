@@ -10,6 +10,7 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/snapform
       - NEXTAUTH_URL=https://snapform.live
       - NEXTAUTH_SECRET=LKSMdf943nnfii43nfd3ef0ewnfnd2we9
+      - AUTH_TRUST_HOST=true
     networks:
       - toki_toki
 
