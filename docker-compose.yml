@@ -1,21 +1,17 @@
-version: '3'
-services:
-  postgres:
-    image: postgres:16  
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: snapform
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - postgres-network
+version: '3.8'
 
-volumes:
-  postgres_data:
+services:
+  form-builder:
+    build:
+      context: . # Make sure your Dockerfile is in this directory
+    container_name: form-builder
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - toki_toki
+
 
 networks:
-  postgres-network:
-    driver: bridge
+  toki_toki:
+    external: true
