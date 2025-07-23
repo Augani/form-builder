@@ -3,11 +3,13 @@ version: '3.8'
 services:
   form-builder:
     build:
-      context: . # Make sure your Dockerfile is in this directory
+      context: . 
     container_name: form-builder
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/snapform
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=LKSMdf943nnfii43nfd3ef0ewnfnd2we9
     networks:
       - toki_toki
 
